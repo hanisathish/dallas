@@ -1,0 +1,19 @@
+.form-horizontal .control-label {
+    text-align: left !important;
+}
+.form-horizontal .form-group:hover{
+    background: #f9f1f8;
+}
+.form-group:hover{
+background:#f9f1f8;
+}
+
+.highlighted-cal-dates
+{
+    pointer-events: none; 
+    cursor: default; 
+}
+.non-highlighted-cal-dates
+{
+    background-color: #29f274 !important;
+}

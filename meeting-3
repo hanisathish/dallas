@@ -1,0 +1,133 @@
+1. email as Login- Done
+2. create email as open , same email id for diff churches
+3. add sub domain name in main church register page
+4. new register page for for that church - Done
+5. new welcome page in main site for signup with  - Done
+6. While creating member send welcome email login usermail and password
+7. Add person with with role and password and welcome email in add person and member register
+8. Primary email and sec email ,,,  home and mobile phone
+9. Fixed roles and they can change only role names
+10. Login user by sub domain name and same email can be used for diff churches but we can differentiate it by subdomain name and email
+
+25-08-2019
+On Add child to events print a lable with onclick
+left and right combination for communication
+bulk upload of users and household
+
+11-Sep-2019
+
+1.Communication email/sms setting in form submition one or 2 templates
+2.Is in group outside memers can join? - yes they can sign up as public view only as joined grp member not as as a member in org
+3. pastors board -
+	only admin/pastor role
+	Color comb for 3 types in facebook wall page
+
+4.scheduling send members email with accept or decline in application level and email
+ sample to be taken from richard
+ 5. scheduling templates to be added in communication tabls
+ https://jp1icp.axshare.com/#g=1&p=notification_1
+
+ 6. in groups settings add form design as a dropdown to seleect the form and display in group	
+
+Is in group outside memers can join?
+
+
+30-Sep-2019
+1. make email id unique for entire application level
+2. Pastor board , in ads make a provision for sell, buy option for paypal payment gateway integraition to church account
+3. pastor sort option
+4. Resource/rooms approval with another option as others , with email id and that shd exist in org and for them room/resource booking approval shd go
+5. in resource create add room dropdown
+6. Events -> 
+	Building Block - crud
+	Location - crud
+	Booked for -> person
+	Suggested Resources - in checkboxes with count dropdown to map available resources
+
+7. Scheduling pull events from events table with calendar date pick,
+remove -Location,Bluiding Block	
+
+
+After event
+
+-	Teams dropdown
+	
+
+20-Oct-2019
+1. (PB)Pastors board one more option as radio button
+	->open to all	 domain
+	->domain only
+2. PB - each posts should have comments add. Only pastor can view the comments
+	If open to all shd show all pastor comments else only to that domain pastor
+
+3. Change serrvice to Position
+4. Scheduling change service->position in all places
+5. Add new tab scheduling in member profile and show the schedulin details and also with accept / decline
+
+12-Dec-2019 Phase-3
+
+1. Color coding for group members 
+2. Profile redirect to ->http://localhost/dallas/public/people/member/0000000003
+3. CHnage  Dallas -> respective church name
+4. Giving
+	->
+	Type of giving
+		Admin only
+		a.Cash/Cheque
+		b.Online
+		c.TexttoGive
+
+
+		1. Giving setup page for admin
+			->stripe -> plugin (paypal)
+			-> TexttoGive check for texttogive option
+			
+		2.Giving Payment transaction details page	
+
+			Accounting module:
+
+			Form with name search, sub type of giving(Cash/Cheque) , cheque details(no,date,bank),Amount, Description, Event, 
+
+			Giving reports=>
+				Name, Payment mode, Sub type payment, event/purpose, Amount ->click here show more details
+
+
+			Church expenses/donation=>
+				Expenses/donation purpose, Payment mode,Sub type payment, Amount , Credit/Debit
+
+		3. Giving page in members
+			-> They can choose event
+			-> As Donation without event
+			-> Page -> 
+			Type => Donation,Events
+				a.Donation=> Amount=>Stripe details=> confiormation
+				b.Events=>Select date=>events listing=>choose an event=>Amount to be entered from member=>stripe details=>payment confiormation
+
+	
+5. Attendance		
+	Pastors to show reports
+	Admin to log the attendance
+	Attendacnce tab in events
+		Admin can select date( Create Schedule)Select Date(Default todays date)=> select event=>Male/Female=> Any Name can be added=> submit
+	Attendance report
+		Date and event filter
+
+6. Group admin will add attendance seperate module for groups
+
+7. Insights
+	Superadmin can 
+	(same like resource from group)upload a doc=>name=>desc
+	Superadmin reports like how many of them viewed 
+	Pastors/Admin can view insights
+8. Serve Team Chat Board (Band)
+	-> configurable option from superadmin to enable disable chat box for roles each organization level
+	Only for volunteer role chat box within orgnazation level	
+	
+9. Communication templates details documented
+			
+
+13 Jan 2020
+1. Church Size dd in signup
+2. Only stripe and other payment
+3. Only event giving needed for attendance log, donation no need of attedance log
+4. Admin add an attendance with display attnadence event wise, only count update 

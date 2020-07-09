@@ -1,0 +1,15 @@
+/node_modules
+/public/hot
+/public/storage
+composer.lock
+/vendor
+/nbproject
+.env
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+README.md
+README.md
+public/assets/uploads/organizations

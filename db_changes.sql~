@@ -1,0 +1,6 @@
+/*15 aug 2019*/
+ALTER TABLE users DROP INDEX users_email_unique;
+
+/* 22 Aug 2019 7.10AM   Sathish*/
+
+

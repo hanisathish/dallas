@@ -1,0 +1,9 @@
+.highlighted-cal-dates
+{
+    pointer-events: none; 
+    cursor: default; 
+}
+.non-highlighted-cal-dates
+{
+    background-color: #29f274 !important;
+}
