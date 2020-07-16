@@ -436,3 +436,10 @@ Route::post("/eventattendance/list", "EventAttendanceController@getEventAttendan
 Route::get("/eventattendance/get_event_attendance_by_id", "EventAttendanceController@getAttendanceCountById");
 Route::post("/eventattendance_data_insert", "EventAttendanceController@storeOrUpdateAttendanceCount");
 Route::get("/eventattendance/eventattendance_data_delete", "EventAttendanceController@deleteAttendanceCountById");
+
+// Settings => Messages
+Route::get("/settings/messages", "Settings\MessageController@index");
+Route::get("/settings/message/create_page", "Settings\MessageController@createMessage");
+Route::post('message/store', 'Settings\MessageController@store')->name('message.store');
+Route::post('message/list', 'Settings\MessageController@messageList');
+Route::get('message/edit/{id}', 'Settings\MessageController@edit');

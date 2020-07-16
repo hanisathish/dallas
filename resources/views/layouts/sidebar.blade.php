@@ -463,6 +463,9 @@
                                     <li @if($url_segment_one == "settings" && $url_segment_two == "payment_others") class='active' @else @endif>
                                         <a href="{{URL::asset('/settings/payment_others')}}">Payment Others</a>
                                     </li>
+                                    <li @if($url_segment_one == "settings" && $url_segment_two == "messages") class='active' @else @endif>
+                                        <a href="{{URL::asset('/settings/messages')}}">Messages</a>
+                                    </li>
 									
                                 </ul>
                             </li>
