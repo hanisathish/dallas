@@ -464,7 +464,13 @@
                                         <a href="{{URL::asset('/settings/payment_others')}}">Payment Others</a>
                                     </li>
                                     <li @if($url_segment_one == "settings" && $url_segment_two == "messages") class='active' @else @endif>
-                                        <a href="{{URL::asset('/settings/messages')}}">Messages</a>
+                                        <a href="{{URL::asset('/settings/message/create_page')}}">Messages</a>
+                                    </li>
+                                    <li @if($url_segment_one == "settings" && $url_segment_two == "mycontact") class='active' @else @endif>
+                                        <a href="{{URL::asset('/settings/mycontact')}}">MyContact</a>
+                                    </li>
+                                    <li @if($url_segment_one == "settings" && $url_segment_two == "bulkupload") class='active' @else @endif>
+                                        <a href="{{URL::asset('/settings/bulkupload')}}">Bulk Upload</a>
                                     </li>
 									
                                 </ul>

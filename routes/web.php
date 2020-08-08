@@ -366,7 +366,7 @@ Route::get('settings/location/edit/{id}', 'Settings\LocationController@editLocat
 Route::get("/settings/payment_gateways", "Settings\PaymentGatewaysController@index");
 Route::post("/settings/payment_gateways/list", "Settings\PaymentGatewaysController@list");
 Route::post("/settings/payment_gateways/store", "Settings\PaymentGatewaysController@storeOrUpdate")->name('payment.store');
-Route::get('settings/payment_gateways/edit/{id}', 'Settings\PaymentGatewaysController@editPaymentGateways');
+Route::get('settings/payment_gateways/edit/{id}/{orgId?}', 'Settings\PaymentGatewaysController@editPaymentGateways');
 
 
 //settings - Payment Others
@@ -439,7 +439,44 @@ Route::get("/eventattendance/eventattendance_data_delete", "EventAttendanceContr
 
 // Settings => Messages
 Route::get("/settings/messages", "Settings\MessageController@index");
-Route::get("/settings/message/create_page", "Settings\MessageController@createMessage");
+Route::get("/settings/message/create_page", "Settings\MessageController@createMessage")->name('message.create_page');
 Route::post('message/store', 'Settings\MessageController@store')->name('message.store');
 Route::post('message/list', 'Settings\MessageController@messageList');
 Route::get('message/edit/{id}', 'Settings\MessageController@edit');
+
+//mycontacts
+Route::resource('settings/mycontact','Settings\MyContactController');
+
+
+Route::post("/settings/mycontact/list", "Settings\MyContactController@getMyContactList");
+
+//mycontactgroup
+Route::resource('settings/mycontactgroup','Settings\MyContactGroupController');
+Route::post("/settings/mycontactgroup/list", "Settings\MyContactGroupController@getMyContactGroupList");
+
+
+Route::post("/settings/mycontactgroup/store", "Settings\MyContactGroupController@store");
+Route::get("/settings/mycontactgroup/showgrp/{groupid?}", "Settings\MyContactGroupController@showGroup");
+Route::post("/settings/mycontactgroup/list_contacts", "Settings\MyContactGroupController@getGroupContactsList");
+Route::get("/settings/mycontactgroup/showaddcontacts/{groupid?}", "Settings\MyContactGroupController@showAddContacts");
+Route::post("/settings/mycontactgroup/list_showaddcontacts", "Settings\MyContactGroupController@getAddContactsList");
+Route::post("settings/addcontactstogroup", "Settings\MyContactGroupController@addContactsToGroup");
+Route::post("settings/addcontactstomeetingsparttable", "Settings\MyContactGroupController@addContactsToMeetingsPartTable");
+
+//ContactGroupMap
+Route::resource('settings/mycontactgroupmap','Settings\ContactGroupMapController');
+
+
+//Bulk Upload
+Route::get('/settings/bulkupload', 'Settings\BulkUploadController@index')->name('bulkupload.index');
+Route::post('/settings/bulk_import_excel', 'Settings\BulkUploadController@bulkImportExcel')->name('bulk_import_excel.store');
+
+
+Route::get('DeleteAll', 'ImportExcelController@DeleteAll');
+Route::get('listItem', 'ImportExcelController@getListItem');
+Route::get('importExport', 'ImportExcelController@importExport');
+Route::get('downloadExcel/{type}', 'ImportExcelController@downloadExcel');
+Route::post('importExcel', 'ImportExcelController@importExcel')->name('import_excel.store');
+ 
+//Cron batch mail
+Route::get('cronbatchemail', 'CronBatchEmailController@index'); 

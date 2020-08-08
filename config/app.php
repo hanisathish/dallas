@@ -178,9 +178,12 @@ return [
         /*Newly Added*/
 		Laravel\Passport\PassportServiceProvider::class,
 		Spatie\Permission\PermissionServiceProvider::class,
-                Yajra\DataTables\DataTablesServiceProvider::class,
-                Camroncade\Timezone\TimezoneServiceProvider::class,
+        Yajra\DataTables\DataTablesServiceProvider::class,
+        Camroncade\Timezone\TimezoneServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
 
+
+        // 'Cartalyst\Stripe\Laravel\StripeServiceProvider',
 
 
     ],
@@ -236,7 +239,11 @@ return [
         /*Newly added*/
 		'Form' => Collective\Html\FormFacade::class,
 		'Html' => Collective\Html\HtmlFacade::class,
-                'DataTables' => Yajra\DataTables\Facades\DataTables::class,
+        'DataTables' => Yajra\DataTables\Facades\DataTables::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+
+        // 'Stripe' => 'Cartalyst\Stripe\Laravel\Facades\Stripe',
+
 
     ],
 

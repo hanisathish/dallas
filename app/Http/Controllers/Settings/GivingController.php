@@ -23,10 +23,13 @@ use App\Models\Team;
 use App\Models\UserMaster;
 use App\User;
 use Auth;
+// use Stripe;
+// use Stripe\Customer;
+// use Stripe\Charge;
 
-use Stripe\Stripe;
-use Stripe\Customer;
-use Stripe\Charge;
+// use Stripe\Stripe;
+// use Stripe\Customer;
+// use Stripe\Charge;
 
 
 class GivingController extends Controller
@@ -194,9 +197,9 @@ class GivingController extends Controller
                 }
             }
 
-            Stripe::setApiKey($data['secret_key']);
+            \Stripe\Stripe::setApiKey($data['secret_key']);
         
-            $customer = Customer::create(array(
+            $customer = \Stripe\Customer::create(array(
                 'email' => $request->stripeEmail,
                 'source'  => $request->stripeToken,
                 'description' => $request->type
@@ -216,7 +219,7 @@ class GivingController extends Controller
                 return redirect('/settings/givings/manage/');
             }
 
-            $charge = Charge::create(array(
+            $charge = \Stripe\Charge::create(array(
                 'customer' => $customer->id,
                 'amount'   => $request->input('amount'),
                 'currency' => Config::get('constants.CURRENCYCODE'),

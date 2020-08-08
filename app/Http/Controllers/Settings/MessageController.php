@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Settings;
 
+use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Location;
@@ -9,6 +10,11 @@ use DB;
 use Config;
 use App\Models\Resources;
 use App\Models\Roles;
+use App\Models\MyContact;
+use App\Models\MyContactGroup;
+use App\Models\CronBatchEmail;
+use App\Models\UserMaster;
+
 use Illuminate\Http\Response;
 use DataTables;
 use Auth;
@@ -20,6 +26,12 @@ class MessageController extends Controller {
         $this->browserTitle = Config::get('constants.BROWSERTITLE');
         $this->common_file_upload_path = Config::get('constants.FILE_UPLOAD_PATH');
         $this->common_file_download_path = Config::get('constants.FILE_DOWNLOAD_PATH');
+
+        $this->middleware(function ($request, $next) {
+            $this->userguard = Auth::guard('web')->user();
+
+            return $next($request);
+        });
     }
 
     public function index() {
@@ -31,10 +43,20 @@ class MessageController extends Controller {
 
     public function createMessage(Request $request) {
         $data['title'] = $this->browserTitle . " - Create Message";
+        
+        
+        $whereUMDAdminArray = array('role_tag' => 'admin', 'users.orgId' => $this->userguard->orgId);
+        // dd($whereUMDAdminArray);
+        $data['selectUserMasterDetail'] = UserMaster::selectUserMasterDetail($whereUMDAdminArray, null, null, null, null, null)->get();
+        // dd($selectUserMasterDetail);
 
-        // $data['roles'] = Roles::selectFromRoles(['orgId'=>Auth::user()->orgId])->get();
-        // $data['category'] = \App\Models\MasterLookupData::selectFromMasterLookupData([["mldKey","=","resource_category"]])->get();
-        // $data['locations'] = Location::listLocations("")->get();
+        $whereMCGArray = array('contact_group.createdBy'=>Auth::user()->id);
+        $dataObj['groupBy'] = array('contact_group.id');
+        $dataObj['orderBy'] = array('contact_group.group_name'=>'asc');
+
+        $data['selectMyContactGroupDetail'] = MyContactGroup::selectMyContactGroupDetail($whereMCGArray,null,null,null,null,$dataObj)->get();
+
+        // dd($data['selectMyContactGroupDetail']);
         return view('settings.message.create_message', $data);
     }
 
@@ -46,36 +68,109 @@ class MessageController extends Controller {
      */
     public function store(Request $request) {
         $insertData = $request->all();
+        // $file = $request->file('camp_attach');
+        // dd($file);
+        //file upload
+        $files = "";
+        $file_name = "";
+        $file_attach = array();
+        $original_name = "";
+        $timestamp = time();
+        $file_details = "";
+        $files_offset = array();
+        
+        //get sent_from_user user details
+        $whereUMDArray = array('users.id'=>$request->input('sent_from_user'));
+        $selectUserMasterDetail = UserMaster::selectUserMasterDetail($whereUMDArray,null,null,null,null,null)->get()[0];
+        if(Input::hasFile('camp_attach')){
+            $files_count = count($_FILES['camp_attach']['name']);
+        
+            for ($i = 0; $i < $files_count; $i++) {
+                
+               
+                    // $file_details = $_FILES['camp_attach']['name'][$i];
+                    $file = $request->file('camp_attach')[$i];//$file = $_FILES['camp_attach'];
+                    // dd($file);
 
-        $resourcesId = $request->resourceId;
+                    
+                    array_push($files_offset, $i);
+                    $destinationPath = $this->common_file_upload_path['ORG_UPLOAD_PATH']. DIRECTORY_SEPARATOR . Auth::user()->orgId. DIRECTORY_SEPARATOR . "campaign";
 
-        //validation rules
+                    \File::makeDirectory($destinationPath, $mode = 0777, true, true);
+
+                    // Check if the uploaded file name consists spaces. If yes, replace with _.
+                    
+
+                    // $file_name = $timestamp . "_" . $file_uplod_name;
+
+                    $extension = $file->getClientOriginalExtension();
+
+                    $imageName = basename($file->getClientOriginalName(), ("." . $extension));
+                    
+                    $imageName = str_replace(",", "_", $imageName);
+                    $imageName = str_replace(" ", "_", $imageName);
+                    $imageName .= "_" . time() . '.' . $extension;
+                    
+                    $file_attach[$i] = $destinationPath . '/' . $imageName;
+                    
+                    $file->move($destinationPath, $imageName);
+                
+            }
+        }
+        // dd($file_attach);
+        $to_list='';
+
+        $serialize_files_offset = serialize($files_offset);
+        $serialize_file_attach = serialize($file_attach);
+        
+
+        $getToEmails = explode(",", $to_list);
+        $getToEmails = array_map("strtolower", $getToEmails);
+        $getToEmails = array_map("trim", $getToEmails);
+        $getToEmails = array_filter($getToEmails);
+        $getToEmails = array_unique($getToEmails);
+        $getToEmails = array_values($getToEmails);
+        $total_recepients_count = count($getToEmails);
+
+        $sub = $request->input('camp_subject');
+
+        $msg = $request->input('camp_message');
+        $msg .= $msg . "\r\n\n";
+        $msg .= "<br><br>Thanks!<br>";
+        // $msg .= $usrfullname . "<br>";
+        // $msg .= $usremail;
+        $whereMCGInArray = array('contact_group_map.contact_group_id'=>$request->input('grp_ids'));
+        $dataObj['groupBy'] = array('contact_list.id');
+        $dataObj['orderBy'] = array('contact_list.id'=>'asc');
+        $selectMyContactDetail = MyContact::selectMyContactDetail(null,$whereMCGInArray,null,null,null,$dataObj)->get();
+        // dd($selectMyContactDetail);
+        foreach($selectMyContactDetail as $selectMyContactDetailVal){
+            
+                $insert_details[] = array(
+                    'orgId' => Auth::user()->orgId,
+                    'subject' => $sub,
+                    'message' => $msg,
+                    'recipient' => $selectMyContactDetailVal->c_email,
+                    // 'cc_recipient' => $cronCcEmails,
+                    'files_offset' => $serialize_files_offset,
+                    'file_attach' => $serialize_file_attach,
+                    'send_status' => 0,
+                    'sent_from' => $selectUserMasterDetail->first_name,//Auth::user()->first_name,
+                    'sent_from_email' => $selectUserMasterDetail->email,//Auth::user()->email,
+                    'send_dts' => date("Y-m-d H:i:s"),
+                    'mail_error' => '',
+                    'createdBy'=>Auth::user()->id
+                    // 'subaccount_id' => $email_subaccount_id
+                );
 
 
-        $item_photo = "";
-        if (isset($request->item_photo) && $request->item_photo != "") {
-            $item_photo = $this->resourceFileUpload($request->item_photo);
+                
+            
         }
 
-        $insertData = $request->except(['_token', 'resourceId','item_photo']);
-
-        if ($item_photo == "") {
-            //$insertData->except(['item_photo']);
-        } else {
-            $insertData['item_photo'] = $item_photo;
-        }
-
-        if ($resourcesId > 0) { //update
-            $insertData['updatedBy'] = Auth::id();
-
-
-            Resources::where("id", $resourcesId)->update($insertData);
-        } else { //insert
-            $insertData['createdBy'] = Auth::id();
-            $insertData['orgId'] = Auth::user()->orgId;
-
-            Resources::create($insertData);
-        }
+        CronBatchEmail::insert($insert_details);
+ 
+        return redirect()->route('message.create_page')->with('success','Message Sent Successfully');
 
         return response()->json(
                         [

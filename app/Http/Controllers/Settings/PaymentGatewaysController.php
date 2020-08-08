@@ -34,7 +34,7 @@ class PaymentGatewaysController extends Controller {
     public function index() {
 
         $data['title'] = $this->browserTitle . " - Payment Gateways Management";
-		
+		$payment_gateways = PaymentGateways::listPaymentGatewaysValues($this->orgId);
         return view('settings.payment_gateways.index', $data);
     }
 
@@ -47,7 +47,7 @@ class PaymentGatewaysController extends Controller {
         return DataTables::of($payment_gateways)
 		
                         ->addColumn('action', function($row) {							
-                            $btn = '<a class="nav-link" href="payment_gateways/edit/'.$row->payment_gateway_id.'"><i class="fa fa-lg"></i>Edit</a>';
+                            $btn = '<a class="nav-link" href="payment_gateways/edit/'.$row->payment_gateway_id.'/'.$row->orgId.'"><i class="fa fa-lg"></i>Edit</a>';
                             return $btn;
                         })
 
@@ -113,18 +113,32 @@ class PaymentGatewaysController extends Controller {
 		$data['gatewayId']  =  $request->segment(4);
 		
 		$orgId = $this->orgId;
+
+		if($request->segment(5)){
+			$whereArray = array('payment_gateway_id' => $request->segment(4), 'orgId' => $orgId);
+			
+			// $data['selectFromPaymentGatewayParameters'] = PaymentGatewayStore::getPaymentGatewayParameterValues($request->segment(4), $orgId);
+		}else{
+			$whereArray = array('payment_gateway_id' => $request->segment(4));
+
+			
+		}	
+
+		$whereArrayPGP = array('payment_gateway_id' => $request->segment(4), 'orgId' => $orgId);
+        	// $data['selectFromPaymentGatewayParameters']  = PaymentGatewayParameters::selectFromPaymentGatewayParameters($whereArrayPGP,null,null,null,null,null)->get();	
+
+		$data['getPaymentGatewayParameterValues'] = PaymentGatewayStore::getPaymentGatewayParameterValues($request->segment(4), $orgId);
 		
-		$whereArray = array('payment_gateway_id' => $request->segment(4));
-		
-	    $data['getPaymentGatewayParameterValues'] = PaymentGatewayStore::getPaymentGatewayParameterValues($request->segment(4), $orgId);
-		
+		// dd($data['getPaymentGatewayParameterValues']);
+	    
+		// dd($data['getPaymentGatewayParameterValues']);
 	    //$data['getPaymentGatewayParameterDetails'] = PaymentGatewayParameters::getPaymentGatewayParameterDetails($request->segment(4), $orgId);
         //dd($data['getPaymentGatewayParameterValues']);		
 		
 		$data['selectFromPaymentGateways']  = PaymentGateways::selectFromPaymentGateways($whereArray,null,null,null,null,null)->get()[0];
 				
-        $selectFromPaymentGatewayParameters = $data['selectFromPaymentGatewayParameters']  = PaymentGatewayParameters::selectFromPaymentGatewayParameters($whereArray,null,null,null,null,null)->get();
-			
+			// dd($data['selectFromPaymentGateways']);
+		
         return view('settings.payment_gateways.create',$data);
 		
     }

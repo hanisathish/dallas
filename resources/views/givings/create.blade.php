@@ -300,11 +300,12 @@ var handler = StripeCheckout.configure({
   });
 
   $('#customButton').on('click', function(e) {
-    var amount = $("#amount").val();
+    var amount_disp = $("#amount").val();
+    var amount = ($("#amount").val()*100);
     // Open Checkout with further options
     handler.open({
       name: 'Organization',
-      description: 'Payment for : ' + $("#type option:selected").text()+' ($ '+amount+')',
+      description: 'Payment for : ' + $("#type option:selected").text()+' ($ '+amount_disp+')',
       amount: amount
     });
     e.preventDefault();
