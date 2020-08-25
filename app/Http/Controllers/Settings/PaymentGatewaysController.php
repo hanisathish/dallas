@@ -108,7 +108,7 @@ class PaymentGatewaysController extends Controller {
 
     public function editPaymentGateways(Request $request) {
 		
-		$data['title'] = $this->browserTitle . " - ";
+		$data['title'] = $this->browserTitle . " - Payment Gateway Edit";
 		  
 		$data['gatewayId']  =  $request->segment(4);
 		
@@ -117,17 +117,18 @@ class PaymentGatewaysController extends Controller {
 		if($request->segment(5)){
 			$whereArray = array('payment_gateway_id' => $request->segment(4), 'orgId' => $orgId);
 			
-			// $data['selectFromPaymentGatewayParameters'] = PaymentGatewayStore::getPaymentGatewayParameterValues($request->segment(4), $orgId);
+			$data['getPaymentGatewayParameterValues'] = PaymentGatewayStore::getPaymentGatewayParameterValues($request->segment(4), $orgId);
 		}else{
 			$whereArray = array('payment_gateway_id' => $request->segment(4));
 
+			$data['getPaymentGatewayParameterValues'] = PaymentGatewayStore::getPaymentGatewayParameterValues($request->segment(4), null);
 			
 		}	
 
 		$whereArrayPGP = array('payment_gateway_id' => $request->segment(4), 'orgId' => $orgId);
         	// $data['selectFromPaymentGatewayParameters']  = PaymentGatewayParameters::selectFromPaymentGatewayParameters($whereArrayPGP,null,null,null,null,null)->get();	
 
-		$data['getPaymentGatewayParameterValues'] = PaymentGatewayStore::getPaymentGatewayParameterValues($request->segment(4), $orgId);
+		
 		
 		// dd($data['getPaymentGatewayParameterValues']);
 	    

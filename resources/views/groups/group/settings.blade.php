@@ -1,7 +1,7 @@
 <div class="col-lg-9">
     <div class="card m-b-30">
         <div class="card-header">
-            Members Information
+            Settings
         </div>
         <div class="card-body">
             <div class="col-12">

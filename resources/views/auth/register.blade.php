@@ -63,12 +63,12 @@
                                     <input id="email" type="text" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}"    autofocus required >
                                 </div>
                             </div>
-                            <!-- <div class="form-group">
+                            <div class="form-group">
                                 <label >Username for login</label>
                                 <div class="col-sm-12">
                                     <input id="username" type="text" class="form-control @error('username') is-invalid @enderror" name="username" value="{{ old('username') }}"    autofocus required >
                                 </div>
-                            </div> -->
+                            </div>
                             
                             <div class="form-group">
                                 <label >Choose a Password</label>

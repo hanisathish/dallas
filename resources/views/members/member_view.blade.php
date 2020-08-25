@@ -74,12 +74,16 @@
             <div class="card-body">
                 <div class="col-12">
                     <div class="row">
-                        <div class="col-6">
-                            <div class="card-header">
-                                School
+                        @if($user->life_stage == "Adult")
+                            
+                        @else
+                            <div class="col-6">
+                                <div class="card-header">
+                                    School
+                                </div>
+                                <i class="fa fa-apple"></i>&nbsp;{{$user->grade_name}} Grade ({{$user->school_name}})
                             </div>
-                            <i class="fa fa-apple"></i>&nbsp;{{$user->grade_name}} Grade ({{$user->school_name}})
-                        </div>
+                        @endif       
                         <div class="col-6">
                             <div class="card-header">
                                 Social Profiles

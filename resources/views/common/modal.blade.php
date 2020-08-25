@@ -1,10 +1,11 @@
 
-<div id="modal-mycontactgroup" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
+<div id="modal-mycontactgroup" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="modal-mycontactgroup" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content modal-dialog-scrollable">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Edit Group</h4>
+                <h5 class="modal-title mt-0" id="profilePicModal">Edit Group Contacts</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+
                 <input type="hidden" name="addContactsPopGroupId" id="addContactsPopGroupId">
             </div>
             <div class="modal-body">
@@ -19,13 +20,14 @@
 </div>
 
 
-<div id="modal-mycontactgrouppop" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable">
+<div id="modal-mycontactgrouppop" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="modal-mycontactgrouppop" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
 
-        <div class="modal-content">
+        <div class="modal-content modal-dialog-scrollable">
             <div class="modal-header">
+                <h4 class="modal-title mt-0">Add Contacts to Group</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Add Contacts to Group</h4>
+                
                 <!-- <input type="text" name="addContactsPopGroupId" id="addContactsPopGroupId"> -->
             </div>
             <div class="modal-body">

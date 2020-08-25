@@ -8,7 +8,7 @@
         <div class="page-title-box">
             <div class="btn-group pull-right">
                 <ol class="breadcrumb hide-phone p-0 m-0">
-                    <li class="breadcrumb-item active">Payment Gateways Management</li>
+                    <li class="breadcrumb-item active">Payment Gateway Edit Parameters</li>
                 </ol>
             </div>
         </div>
@@ -17,9 +17,11 @@
 <!-- end page title end breadcrumb -->
 
 <div class="row">
-	<div class="col-sm-0 col-md-1 col-lg-2"></div>
+	<div class="col-sm-0 col-md-1 col-lg-2">
+     
+    </div>
 	<div class="col-sm-12 col-md-10 col-lg-8 card">
-
+<h5>Edit Payment Gateway - <i>{{$selectFromPaymentGateways->gateway_name}}</i></h5>   
 <form method="post" action="{{ route('payment.store') }}" name="create_payment_form" id="create_payment_form" enctype="multipart/form-data">
  <div id="create_payment_form_status"></div>
     <div class="row">

@@ -23,7 +23,11 @@ $(document).ready(function () {
             email: {
                 required: true,
                 email:true,
-                uniqueEmail:true
+                // uniqueEmail:true
+            },
+            username: {
+                required: true,
+                uniqueUsername:true
             },
             password: {
                 required: true,
@@ -256,3 +260,27 @@ $("#btnSignIn").click(function () {
 
     }
 });
+
+//Check for unique username throught application
+$.validator.addMethod("uniqueUsername", function(ahSiteId, element) {
+    //alert('ss');
+    var mydata1 = null;
+    var orgId = $.trim($('#orgId').val());
+    var username = $.trim($('#username').val());
+    
+    var dataString = 'orgId='+orgId+'&username='+username;
+    //alert(dataString);
+    $.ajax({
+        type: "POST",
+        async: false,
+        data: dataString,
+        url: siteUrl+'/check_unique_username',
+        success: function(data){
+            //alert(data);
+            if (data == "found"){
+                mydata1 = data;
+            }
+        }
+    });
+    return (mydata1 != "found");
+}, 'This Username is already exist. Choose any other username please.');

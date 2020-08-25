@@ -18,6 +18,7 @@ use App\Models\UserMaster;
 use Illuminate\Http\Response;
 use DataTables;
 use Auth;
+use App\Helpers\CommunicationHelper;
 
 class MessageController extends Controller {
 
@@ -135,22 +136,27 @@ class MessageController extends Controller {
         $sub = $request->input('camp_subject');
 
         $msg = $request->input('camp_message');
-        $msg .= $msg . "\r\n\n";
+        $msg .= "\r\n\n";
         $msg .= "<br><br>Thanks!<br>";
         // $msg .= $usrfullname . "<br>";
         // $msg .= $usremail;
+        $insert_details = array();
         $whereMCGInArray = array('contact_group_map.contact_group_id'=>$request->input('grp_ids'));
-        $dataObj['groupBy'] = array('contact_list.id');
-        $dataObj['orderBy'] = array('contact_list.id'=>'asc');
-        $selectMyContactDetail = MyContact::selectMyContactDetail(null,$whereMCGInArray,null,null,null,$dataObj)->get();
-        // dd($selectMyContactDetail);
+        $dataObj['groupBy'] = array('users.id');
+        $dataObj['orderBy'] = array('users.id'=>'asc');
+        // $selectMyContactDetail = MyContact::selectMyContactDetail(null,$whereMCGInArray,null,null,null,$dataObj)->get();
+        $selectMyContactDetail = MyContact::selectMyContactUserDetail(null,$whereMCGInArray,null,null,null,$dataObj)->get();
+        $selectMyContactDetailresult = $selectMyContactDetail->toArray();
+        // dd(array_column($selectMyContactDetailresult,'id'));
         foreach($selectMyContactDetail as $selectMyContactDetailVal){
-            
+            if($selectMyContactDetailVal->email){
+             
                 $insert_details[] = array(
+                    'recipient_user_id' => $selectMyContactDetailVal->id,
                     'orgId' => Auth::user()->orgId,
                     'subject' => $sub,
                     'message' => $msg,
-                    'recipient' => $selectMyContactDetailVal->c_email,
+                    'recipient' => $selectMyContactDetailVal->email,
                     // 'cc_recipient' => $cronCcEmails,
                     'files_offset' => $serialize_files_offset,
                     'file_attach' => $serialize_file_attach,
@@ -162,13 +168,24 @@ class MessageController extends Controller {
                     'createdBy'=>Auth::user()->id
                     // 'subaccount_id' => $email_subaccount_id
                 );
-
-
+      
+            }
                 
             
         }
+        if($insert_details){
+            CronBatchEmail::insert($insert_details);
 
-        CronBatchEmail::insert($insert_details);
+            //generate message communication
+            $userIds = array_column($selectMyContactDetailresult,'id');
+            if(count($userIds) > 0){
+                $messageData['subject'] = $sub;
+                $messageData['body'] = $msg;
+                CommunicationHelper::generateCommunications('message', Auth::user()->orgId, '1', Auth::user()->id, $userIds, null, $messageData);
+            }
+        }
+
+        
  
         return redirect()->route('message.create_page')->with('success','Message Sent Successfully');
 

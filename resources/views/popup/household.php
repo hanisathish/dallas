@@ -74,7 +74,7 @@
             item.users.forEach(function(userItem, index){
                 let primaryContent = userItem.isPrimary === 1? '<i class="fa fa-star></i>' : '';
                 userEl= `<p id="${'user-block'+userItem.id}"><i class="fa fa-user"></i> 
-                    <a href="${personal_id === userItem.personal_id? '#' : '/people/member/'+ userItem.personal_id}" >
+                    <a href="${personal_id === userItem.personal_id? '#' : `siteUrl`+'/people/member/'+ userItem.personal_id}" >
                         ${userItem.full_name}
                     </a>
                     ${primaryContent} 
@@ -446,8 +446,8 @@
         }else {
             let noRecord = `<p>No records found</p>`;
             records.push(noRecord);
-        }
-        let createUserBtn = `<a href="/people/member/management" type="button" class="btn btn-secondary btn-lg btn-block">
+        }//people/member/management
+        let createUserBtn = `<a href=`+siteUrl+`/people/member/management type="button" class="btn btn-secondary btn-lg btn-block">
                              <i class="fa fa-user"></i> Create A New Person</a>`
         records.push(createUserBtn);
         $("#search-users-list").html(records);

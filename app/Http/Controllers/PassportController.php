@@ -28,6 +28,8 @@ use Camroncade\Timezone\Facades\Timezone;
 
 use App\Models\UserMaster;
 use App\Models\CommTemplate;
+use App\Helpers\CommunicationHelper;
+
 class PassportController extends Controller {
 
     
@@ -315,7 +317,7 @@ class PassportController extends Controller {
         
         $data['title'] = $this->browserTitle . " - Login";
         $credentials = [
-            'email' => $request->email,
+            'username' => $request->username,
             'password' => $request->password
         ];//dd($credentials);
         //admin@admin.com
@@ -325,7 +327,7 @@ class PassportController extends Controller {
             $data['selectFromUserCustom'] = $selectFromUserCustom = User::selectFromUserCustom($whereArrayUser)->get();
             //dd($selectFromUserCustom[0]['user_id']);
             //return response()->json(['userData' => $userData->only(['id', 'name', 'email'])], 200);
-            $token = auth()->user()->createToken('dollar')->accessToken;
+            $token = auth()->user()->createToken('dallas')->accessToken;
             $resultSetSessionArray["umId"] = $userData['id'];
             $resultSetSessionArray["umName"] = $selectFromUserCustom[0]['user_name'];
             $resultSetSessionArray["umEmail"] = $selectFromUserCustom[0]['user_email'];
@@ -347,10 +349,10 @@ class PassportController extends Controller {
             }
         } else {
             if ($request->segment(1) == "webapp") {
-                $errors = new MessageBag(['email' => ['Email and/or password invalid.']]);
+                $errors = new MessageBag(['username' => ['Username / password invalid.']]);
                 return Redirect::back()->withErrors($errors)->withInput(Input::except('password'));
             } else {
-                return response()->json(['result_code' => 2,'failure' => 'Email and/or password invalid.'], 200);
+                return response()->json(['result_code' => 2,'failure' => 'Username / password invalid.'], 200);
             }
         }
     }
@@ -365,6 +367,7 @@ class PassportController extends Controller {
                         'orgName' => 'required',
                         'first_name' => 'required',
                         'email' => 'required|email',
+                        'username' => 'required',
                         'password' => 'required',
                         'orgDomain' => 'required',
             ]);
@@ -453,10 +456,10 @@ class PassportController extends Controller {
                 //Insert into master_lookup_data table
                 $selectMasterLookupData = MasterLookupData::where('orgId',0)
                   //->where('role_tag','!=','superadmin')
-                  ->select(array(DB::raw("'$insertOrganization->orgId'"),'mldKey','mldValue','mldType','mldOption',DB::raw("'$todaysDate'"),DB::raw("'$todaysDate'")));
+                  ->select(array(DB::raw("'$insertOrganization->orgId'"),'mldKey','mldValue','mldType','mldOption','mldOrder',DB::raw("'$todaysDate'"),DB::raw("'$todaysDate'")));
                 
                 
-                DB::table('master_lookup_data')->insertUsing(['orgId','mldKey','mldValue','mldType','mldOption','created_at','updated_at'], $selectMasterLookupData);
+                DB::table('master_lookup_data')->insertUsing(['orgId','mldKey','mldValue','mldType','mldOption','mldOrder','created_at','updated_at'], $selectMasterLookupData);
                 //////
                 
                 // $request['roles'] = 2;
@@ -586,6 +589,25 @@ class PassportController extends Controller {
         }
         return "notfound";
     }
+    
+    
+    /**
+     * @Function name : checkUniqueUsername
+     * @Purpose : Check username exist
+     * @Added by : Sathish    
+     * @Added Date : Aug 13, 2020
+     */
+    
+    public function checkUniqueUsername(Request $request)
+    {
+        //'orgId' => $request->orgId,
+        $whereArrayAT = array('username' => $request->username);
+        $selectFromUserMaster = UserMaster::selectFromUserMaster($whereArrayAT)->get()->count();
+        if($selectFromUserMaster > 0){
+            return "found";
+        }
+        return "notfound";
+    }
 
     /**
      * @Function name : checkUniqueEmail
@@ -618,6 +640,7 @@ class PassportController extends Controller {
         try {
             
             $validator = Validator::make($request->all(), [
+                        'username' => 'required',
                         'first_name' => 'required',
                         'email' => 'required|email',
                         'password' => 'required'
@@ -646,6 +669,16 @@ class PassportController extends Controller {
             //insert into model_has_roles with admin role
             DB::table('model_has_roles')->insert(array('role_id'=>$rolesAdminData[0]->id,'model_type'=>'App\User','model_id'=>$insertUser->id));
             
+
+            //generate welcome email communication
+            $userIds = [$insertUser->id];
+            if(count($userIds) > 0){
+                CommunicationHelper::generateCommunications('welcome', $request->orgId, 1, $insertUser->id, $userIds);
+            }
+
+            
+            
+
             DB::commit();
             return redirect()->back()->with('message', 'Account has been created');
             

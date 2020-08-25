@@ -24,7 +24,7 @@ class MasterLookupData extends Model  {
      *
      * @var array
      */
-    protected $fillable = ['mldId', 'orgId', 'mldKey', 'mldValue', 'mldType', 'mldOption', 'createdBy', 'created_at', 'updatedBy', 'updated_at', 'deletedBy', 'deleted_at'];
+    protected $fillable = [ 'mldId', 'orgId', 'mldKey', 'mldValue', 'mldType', 'mldOption', 'mldOrder', 'createdBy', 'created_at', 'updatedBy', 'updated_at', 'deletedBy', 'deleted_at'];
 
     /**
      * The attributes excluded from the model's JSON form.

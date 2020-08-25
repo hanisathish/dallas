@@ -57,6 +57,7 @@ class MemberController extends Controller
         } else {
             $data['title'] = $this->browserTitle . " - Member Create";
         }
+
         $lookupData = Lookup::memberQueryData($orgId, $keys);
         foreach($keys1 as $key){
             $data[$key] = $lookupData[$key];
@@ -73,7 +74,7 @@ class MemberController extends Controller
     public function storeOrUpdate(Request $request, $personal_id=null){
         
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email|Regex:/^([a-zA-Z0-9]+[a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,})$/',
+            'email' => 'required|email',//|Regex:/^([a-zA-Z0-9]+[a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,})$/
             ]);
         if ($validator->passes()) {
             $user = null;
@@ -87,9 +88,10 @@ class MemberController extends Controller
                 $user['personal_id'] = str_pad($count + 1, 10, "0", STR_PAD_LEFT);
                 $user['password'] = "password";
                 $request[''] = 2;
+                $user['householdName'] = $request->first_name."'s household";
             }
             $user['address'] = $request->street_address."///".$request->apt_address."///".$request->city_address."///".$request->state_address."///".$request->zip_address;
-            $user['householdName'] = $request->first_name."'s household";
+            
             $keys= ['name_prefix', 'first_name','middle_name', 'last_name', 'name_suffix', 'given_name', 'nick_name',
                      'email', 'mobile_no', 'life_stage', 'gender', 'dob', 'marital_status', 'doa', 'school_name', 
                      'grade_id', 'medical_note', 'social_profile'
@@ -98,10 +100,14 @@ class MemberController extends Controller
                 $user[$key] = $request[$key];
             }
             $user['full_name'] = $this->extractFullName($user);
-
-            $user['dob'] = (isset($request->dob) ? date('Y-m-d',strtotime($request->dob)) : null);
-            $user['doa'] = (isset($request->doa) ? date('Y-m-d',strtotime($request->doa)) : null);
             
+            if($request->dob){
+                $user['dob'] = (isset($request->dob) ? date('Y-m-d',strtotime($request->dob)) : null);    
+            }
+            
+            if($request->doa){
+                $user['doa'] = (isset($request->doa) ? date('Y-m-d',strtotime($request->doa)) : null);    
+            }
             
             $user->save();
 

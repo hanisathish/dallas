@@ -19,7 +19,13 @@
                                     <a href="#" class="btn btn-light btn-sm">{{ucwords($groupDetails->group_type_name)}}</a>
 
                             </div><!-- end col -->
+                            <?php $domainData = \App\Models\Organization::find(Session::get('userSessionData')['umOrgId']); 
+                            $orgUrl = $domainData['orgDomain'].'/groups/';
+                            ?>
 
+                            <div class="col-md-2 col-lg-2 col-xl-2">
+                                <a href="<?php echo url($orgUrl);?>" class="btn btn-info btn-sm" target="_blank">Open Group In Public Page</a>
+                            </div>
 
                             <!-- end col -->
                         </div>

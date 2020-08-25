@@ -193,54 +193,36 @@
    //Delete the group data
 function group_contact_map_data_delete(id)
 {
-     
-
     var dataString = 'id=' + id;
-    // alert(dataString);
-    bootbox.confirm({
-        title: "Confirm",
-        message: "<h4 id='modal_content'>Do you want to continue to delete this contact from group?</h4>",
-        buttons: {
-            cancel: {
-                label: '<i class="fa fa-times"></i> No',
-                className: 'btn-danger'
-            },
-            confirm: {
-                label: '<i class="fa fa-check"></i> Confirm',
-                className: 'btn-success'
-            }
-        },
-        callback: function (result) {
-            if (result === true) {
-                $.ajax({
-                    url: siteUrl + '/settings/mycontactgroupmap/'+id,
-                    async: true,
-                    type: "DELETE",
-                    // data: dataString,
-                    data: {"id": id , _method: 'delete'},
-                    dataType: "html",
-                    // contentType: false,
-                    // cache: false,
-                    // processData: false,
-                    success: function (data)
-                    {
-                        if(data == "success"){
-                            alert("Contact Deleted from this Group ");
-                            loadGroupContactsDatatable();
-                            loadMyContactDatatable();
-                            loadMyContactGroupDatatable();
-                        }
-                        //location.reload();
-                        
+    //alertify.confirm("Do you want to continue to delete this contact from group??", function (asc) {
+        //  if (asc) {
+             //ajax call for delete    
+        if(confirm("Do you want to continue to delete this contact from group?")){
+            $.ajax({
+                url: siteUrl + '/settings/mycontactgroupmap/'+id,
+                async: true,
+                type: "DELETE",
+                // data: dataString,
+                data: {"id": id , _method: 'delete'},
+                dataType: "html",
+                success: function (data)
+                {
+                    if(data == "success"){
+                        alert("Contact Deleted from this Group ");
+                        loadGroupContactsDatatable();
+                        loadMyContactDatatable();
+                        loadMyContactGroupDatatable();
                     }
-                })
-            }
-            else
-            {
+                }
+            });
+        }   
+            /*
+             alertify.success("Record is deleted.");
 
-            }
-        }
-    });
+         } else {
+             alertify.error("You've clicked cancel");
+         }
+     },"Default Value");*/
    
  }
 </script>

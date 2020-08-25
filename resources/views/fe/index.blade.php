@@ -693,6 +693,9 @@
                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}"    autofocus required placeholder="Email">
               </div>
               <div class="form-group">
+                <input class="form-control" name="username" id="username" type="text" value="" placeholder="Username" required>
+              </div>
+              <div class="form-group">
                 <input class="form-control" name="password" id="password" type="password" value="" placeholder="Password" required>
               </div>
               <div class="form-group">
@@ -753,7 +756,7 @@
             @csrf
                
               <div class="form-group">
-                <input autocomplete="off" id="email" type="email" class="form-control" name="email"     autofocus required placeholder="Email">
+                <input autocomplete="off" id="username" type="text" class="form-control" name="username"     autofocus required placeholder="Username">
               </div>
               <div class="form-group">
                 <input class="form-control" name="password" id="password" type="password" value="" placeholder="Password" required>

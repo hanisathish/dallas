@@ -283,12 +283,16 @@
     </div>
     
 </div>
+@section('js_script')
 <script type="text/javascript" src="{{ URL:: asset('js/custom/givings.js')}}"></script>
 
 <script src="https://checkout.stripe.com/v2/checkout.js"></script>
-
+<style>
+   .css-class-to-highlight{
+       background-color: #ff0;
+   }
+</style>
 <script type='text/javascript'>
-
 var handler = StripeCheckout.configure({
     key: $("#stripe_public_key").val(),
     image: '{{ URL::asset('assets/theme/images/bible-cross-logo.png')}}',
@@ -407,9 +411,9 @@ setTimeout(function(){
 $(document).ready(function(){
        
 	var today               = new Date();
-	var today_formatted     = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+('0'+today.getDate()).slice(-2);
-	var user_busy_days      = <?php echo json_encode(array_unique((array_column($upcoming_events, 'eventCreatedDate'))));?>;//['2019-11-09','2019-11-16','2019-11-19'];
-	//console.log(user_busy_days);
+	
+	var user_busy_days      = <?php echo json_encode(array_unique($upcoming_events));?>;//
+	// console.log(user_busy_days);
 	$('.selecteventdate').datepicker({
 		autoclose: true,
 		format: 'yyyy-mm-dd',
@@ -417,15 +421,31 @@ $(document).ready(function(){
 		sideBySide: true,
 		beforeShowDay: function (date) {
 
-			calender_date = date.getFullYear()+'-'+('0'+date.getMonth()+1).slice(-2)+'-'+('0'+date.getDate()).slice(-2);
+			var month = date.getMonth()+1;
+            var year = date.getFullYear();
+            var day = date.getDate();
+            
+            // Change format of date
+            var newdate = day+"-"+month+'-'+year;
 
-			var search_index = $.inArray(calender_date, user_busy_days);
+            // Set tooltip text when mouse over date
+            var tooltip_text = "New event on "+newdate;
 
-			if (search_index > -1) {
-				return {classes: 'non-highlighted-cal-dates', tooltip: 'User available on this day.'};
-			}else{
-				return {classes: 'highlighted-cal-dates', tooltip: 'User not available on this day.'};
-			}
+            // Check date in Array
+            if(jQuery.inArray(newdate, user_busy_days) != -1){
+                return {classes: 'non-highlighted-cal-dates', tooltip: 'Event available on this day.'};
+            }else{
+             return {classes: 'highlighted-cal-dates', tooltip: 'Event not available on this day.'};
+            }
+			// calender_date = date.getFullYear()+'-'+('0'+date.getMonth()+1).slice(-2)+'-'+('0'+date.getDate()).slice(-2);
+
+			// var search_index = $.inArray(calender_date, user_busy_days);
+
+			// if (search_index > -1) {
+			// 	return {classes: 'non-highlighted-cal-dates', tooltip: 'User available on this day.'};
+			// }else{
+			// 	return {classes: 'highlighted-cal-dates', tooltip: 'User not available on this day.'};
+			// }
 
 		}
 		//datesDisabled: ['11/20/2019'],
@@ -438,6 +458,6 @@ $(document).ready(function(){
 
 
 <link href="{{ URL::asset('css/custom_page.css') }}" rel="stylesheet" type="text/css" />
-
+@endsection
 
 @endsection

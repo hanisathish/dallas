@@ -1164,3 +1164,13 @@ INSERT INTO `comm_templates` (`id`, `tag`, `name`, `subject`, `body`, `org_id`, 
 -- Santhosh 23 Jan 2020
 
 ALTER TABLE `comm_details` CHANGE `updated_at` `updated_at` TIMESTAMP on update CURRENT_TIMESTAMP NULL; 
+
+-- Sathish not executed in live - 12 aug 2020
+ALTER TABLE `comm_details` CHANGE `updated_at` `updated_at` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP; 
+ALTER TABLE `cron_batch_email`  ADD `recipient_user_id` BIGINT(20) NULL DEFAULT NULL  AFTER `cron_id`;
+
+ALTER TABLE `master_lookup_data` ADD `mldOrder` INT(10) NOT NULL DEFAULT '0' AFTER `mldOption`; 
+
+INSERT INTO `comm_templates` (`id`, `tag`, `name`, `subject`, `body`, `org_id`, `createdBy`, `created_at`, `updatedBy`, `updated_at`, `deletedBy`, `deleted_at`) VALUES (NULL, 'message', 'Message', 'Message Sujbect', 'Message Body', '0', NULL, '2019-08-21 18:01:18', NULL, '0000-00-00 00:00:00', NULL, NULL); 
+
+ALTER TABLE `comm_masters` CHANGE `subject` `subject` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `body` `body` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL; 

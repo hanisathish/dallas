@@ -115,7 +115,11 @@
     {!! Form::close() !!}
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
- 
+<?php 
+// echo json_encode(array_unique((array_column($upcoming_events, 'eventCreatedDate'))));
+?>
+
+@section('js_script') 
 <script>
 
 	// An array of highlighting dates ( 'dd-mm-yyyy' )
@@ -144,8 +148,8 @@
 		loadAttendanceCountDatatable();
 		
 		var today               = new Date();
-		var today_formatted     = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+('0'+today.getDate()).slice(-2);
-		var user_busy_days      = <?php echo json_encode(array_unique((array_column($upcoming_events, 'eventCreatedDate'))));?>;//['2019-11-09','2019-11-16','2019-11-19'];
+		
+		var user_busy_days      = <?php echo json_encode(array_unique($upcoming_events));?>;//['2019-11-09','2019-11-16','2019-11-19'];
 		//console.log(user_busy_days);
 		$('.selecteventdate').datepicker({
 			autoclose: true,
@@ -154,15 +158,33 @@
 			sideBySide: true,
 			beforeShowDay: function (date) {
 
-				calender_date = date.getFullYear()+'-'+('0'+date.getMonth()+1).slice(-2)+'-'+('0'+date.getDate()).slice(-2);
+                var month = date.getMonth()+1;
+                var year = date.getFullYear();
+                var day = date.getDate();
+                
+                // Change format of date
+                var newdate = day+"-"+month+'-'+year;
 
-				var search_index = $.inArray(calender_date, user_busy_days);
+                // Set tooltip text when mouse over date
+                var tooltip_text = "New event on "+newdate;
 
-				if (search_index > -1) {
-					return {classes: 'non-highlighted-cal-dates', tooltip: 'User available on this day.'};
-				}else{
-					return {classes: 'highlighted-cal-dates', tooltip: 'User not available on this day.'};
-				}
+                // Check date in Array
+                if(jQuery.inArray(newdate, user_busy_days) != -1){
+                    return {classes: 'non-highlighted-cal-dates', tooltip: 'Event available on this day.'};
+                }else{
+                 return {classes: 'highlighted-cal-dates', tooltip: 'Event not available on this day.'};
+                }
+                return [true];
+
+				// calender_date = date.getFullYear()+'-'+('0'+date.getMonth()+1).slice(-2)+'-'+('0'+date.getDate()).slice(-2);
+
+				// var search_index = $.inArray(calender_date, user_busy_days);
+
+				// if (search_index > -1) {
+				// 	return {classes: 'non-highlighted-cal-dates', tooltip: 'User available on this day.'};
+				// }else{
+				// 	return {classes: 'highlighted-cal-dates', tooltip: 'User not available on this day.'};
+				// }
 
 			}
 			//datesDisabled: ['11/20/2019'],
@@ -382,5 +404,6 @@ function attendance_count_data_delete(attendanceCountId)
 </script>
 
 <script type="text/javascript" src="{{ URL:: asset('js/custom/attedance_count.js')}}"></script>
+@endsection
 
 @endsection

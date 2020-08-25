@@ -238,4 +238,50 @@ class UserMaster extends Model  {
         return $user;
     }
 
+    /**
+    * @Function name : getUserContactData
+    * @Purpose : crud account heads based on  array
+    * @Added by : Sathish
+    * @Added Date : Nov 07, 2018
+    */
+    public static function getUserContactData($whereArray=null,$whereInArray=null,$whereNotInArray=null,$whereNotNullArray=null,$whereNullArray=null,$data=null) {
+        $query = UserMaster::select(
+            'users.id as id','users.orgId',
+            'users.email','users.first_name','users.last_name',
+            'contact_group_map.id as grpConMapid');
+
+        $query->leftJoin('contact_group_map', function($join) {
+            $join->on("contact_group_map.contact_list_id", "=", "users.id");
+        });
+        
+        if($whereArray){
+            $query->where($whereArray);
+        }
+        if($whereInArray){
+            foreach($whereInArray as $key=>$value){
+                $whereInFiltered = array_filter($value);
+                $query->whereIn($key,$whereInFiltered);
+            }
+        }
+        if($whereNotInArray){
+            foreach($whereNotInArray as $key=>$value){
+                $whereNotInFiltered = array_filter($value);
+                $query->whereNotIn($key,$whereNotInFiltered);
+            }
+        }
+        if($whereNotNullArray){
+            foreach($whereNotNullArray as $value){
+                $query->whereNotNull($value);
+            }
+        }
+        if($whereNullArray){
+            foreach($whereNullArray as $value){
+                $query->whereNull($value);
+            }
+        }
+
+        $query->groupBy('users.id');
+        return $query;
+    }
+
 }

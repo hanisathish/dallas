@@ -248,12 +248,12 @@ class EventAttendanceController extends Controller {
             if(strtotime($crudEventsvalue->eventCreatedDate) >= strtotime(date('Y-m-d')))
             {
                 //dd($crudEventsvalue->eventCreatedDate);$key=>
-                $eventsData[] = $crudEventsvalue;
+                $eventsData[] = date('j-n-Y',strtotime($crudEventsvalue->eventCreatedDate));
             }
             
         }
         $data['upcoming_events']=$eventsData;
-
+        // dd($eventsData);
         return view('eventattendance.index', $data);
     }
 	

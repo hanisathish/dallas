@@ -16,7 +16,7 @@ class CronBatchEmail extends Model
 	public $timestamps = false;
 
     protected $fillable = [
-          'cron_id', 'orgId', 'subject', 'message', 'recipient', 'cc_recipient', 'files_offset', 'file_attach', 'send_status', 'sent_from', 'sent_from_email', 'send_dts', 'mail_error', 'subaccount_id', 'createdBy', 'created_at', 'updatedBy', 'updated_at', 'deletedBy', 'deleted_at'
+        'cron_id', 'recipient_user_id', 'orgId', 'subject', 'message', 'recipient', 'cc_recipient', 'files_offset', 'file_attach', 'send_status', 'sent_from', 'sent_from_email', 'send_dts', 'mail_error', 'subaccount_id', 'createdBy', 'created_at', 'updatedBy', 'updated_at', 'deletedBy', 'deleted_at'
     ];
 
     protected $guarded = [];

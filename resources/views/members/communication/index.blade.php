@@ -29,7 +29,7 @@
                             <thead>
                                 <tr>
                                     <th>Sl No</th>
-                                    <th>Name</th>
+                                    <th>Type</th>
                                     <th>Subject</th>
                                     <!-- <th>Body</th> -->
                                     <!-- <th>Read Status</th>
@@ -47,9 +47,10 @@
     </div> <!-- end col -->
 </div> <!-- end row -->
 
-<div id="commModal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" data-backdrop="static">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
+
+<div id="commModal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" data-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content modal-dialog-scrollable">
             <div class="modal-header" id="commModalTitle"></div>
             <div class="modal-body" id="commModalBody"></div>
             <div class="modal-footer" id="commModalFooter"></div>

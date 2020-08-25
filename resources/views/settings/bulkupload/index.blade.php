@@ -54,14 +54,15 @@
                     <div class="col-sm-3">
                         <select name="bulk_upload_type" id="bulk_upload_type" class="form-control"  onchange="javascript:show_upload_sample_file(this)" >
                             <option value="">--Select--</option>
-                            <option value="contact_bulk">Contact Upload</option>
+                            <!-- <option value="contact_bulk">Contact Upload</option> -->
+                            <option value="member_bulk">Member Upload</option>
                             
                         </select>
                     </div>
                     <div class="col-sm-3" >
                         <span class="bulk_upload_type_class member_bulk_file"></span>
                         <span class="bulk_upload_type_class contact_bulk_file">
-                            <a class="btn btn-outline-info waves-effect waves-light" href="{{asset('assets/uploads/bulk_upload_sample/bulk_contact_sample.xls')}}"><i class="fa fa-download"></i> Download Sample File</a>
+                            <a class="btn btn-outline-info waves-effect waves-light" href="{{asset('assets/uploads/bulk_upload_sample/bulk_member_sample.csv')}}"><i class="fa fa-download"></i> Download Sample File</a>
                         </span>                        
                     </div>
                     

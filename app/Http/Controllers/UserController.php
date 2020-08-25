@@ -35,6 +35,12 @@ class UserController extends Controller {
         $this->common_file_download_path = Config::get('constants.FILE_DOWNLOAD_PATH');
 
         $this->userSessionData = Session::get('userSessionData');
+
+        $this->middleware(function ($request, $next) {
+            $this->userguard = Auth::guard('web')->user();
+
+            return $next($request);
+        });
     }
 
     /**
@@ -190,7 +196,7 @@ class UserController extends Controller {
                 $profile_pic_image_json = json_decode(unserialize($selectUserMasterDetailData->profile_pic));
                 $profile_pic_image = $profile_pic_image_json->download_path . $profile_pic_image_json->uploaded_file_name;
             }
-            $row[] = '<img class="d-flex mr-3 rounded-circle" src="' . $profile_pic_image . '" alt="Generic placeholder image" height="64">';
+            $row[] = '<img class="d-flex mr-3 rounded-circle" src="' . $profile_pic_image . '" alt="" height="64">';
             $row[] = '<a href="' . $profile_edit_link . '">' . $selectUserMasterDetailData->first_name . " " . $selectUserMasterDetailData->last_name . '</a>';
             //$row[] = $selectUserMasterDetailData->orgId;
             $row[] = $selectUserMasterDetailData->email;
@@ -498,4 +504,68 @@ class UserController extends Controller {
         
     }
 
+    /**
+     * @Function name : getUserContactData
+     * @Purpose : To fetch getUserContactData
+     * @Added by : Sathish
+     * @Added Date : Nov 05, 2018
+     */
+    public function getUserContactData(Request $request) {
+        $result = array();
+        $data = array();
+        $whereArray = array('users.orgId' => $this->userSessionData['umOrgId'],'contact_group_map.contact_group_id' => $request->input('addContactsPopGroupId'));
+        $whereNotInArray = null;
+        // if ($request->admindatatable == 1) {
+        //     $whereArray = array('role_tag' => $request->role_tag, 'users.orgId' => $this->userSessionData['umOrgId']);
+        // } else {
+        //     //$whereNotInArray = array('role_tag' => array('admin'));
+        // }
+
+        $getUserContactData = UserMaster::getUserContactData($whereArray, null, $whereNotInArray, null, null, null)->get();
+
+        foreach ($getUserContactData as $getUserContactDataVal) {
+            $row = array();
+
+            $row[] = $getUserContactDataVal->grpConMapid;
+            $row[] = $getUserContactDataVal->email;
+            $row[] = $getUserContactDataVal->first_name;
+            $row[] = $getUserContactDataVal->last_name;
+
+            //showConfirm
+            
+
+            $button_html = '<a class="btn btn-xs btn-danger" onclick="group_contact_map_data_delete(' . $getUserContactDataVal->grpConMapid . ')"   href="#"><i class="fa fa-trash"></i></a>';
+ 
+            $row[] = $button_html;
+            $result[] = $row;
+        }
+        return Datatables::of($result)->escapeColumns(['user_id'])->make(true);
+    }
+
+    /**
+     * @Function name : showAddUserContacts
+     * @Purpose :  MyContactGroups listing
+     * @Added by : Sathish    
+     * @Added Date : Jul 03, 2019
+     */
+    public function showAddUserContacts($groupId)
+    {
+        $contactList="contact";
+        $whereArray = array('contact_group_map.contact_group_id' => $groupId);
+        //dd($whereArray);
+        if($this->userguard->roles[0]->name == "superadmin"){
+            $selectShowAddContactsList  = DB::select( DB::raw(" SELECT users.id,users.email,users.first_name,users.last_name FROM users  WHERE  users.id not in(select contact_group_map.contact_list_id from contact_group_map  where contact_group_map.contact_group_id='$groupId')") );
+        }else{
+            $selectShowAddContactsList  = DB::select( DB::raw(" SELECT users.id,users.email,users.first_name,users.last_name FROM users  WHERE  users.orgId = '".$this->userguard->orgId."' 
+            and users.id not in(select contact_group_map.contact_list_id from contact_group_map  where contact_group_map.contact_group_id='$groupId')") );
+        }
+
+
+        // dd($selectShowAddContactsList[0]->id);
+
+        //MyContact::selectShowAddContactsList($whereArray,null,null,null,null,null)->get();
+        // dd($selectShowAddContactsList);
+        return view('settings.mycontactgroup.contact_list_add',compact('selectShowAddContactsList'));
+
+    }
 }

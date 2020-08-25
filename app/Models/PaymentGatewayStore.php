@@ -56,7 +56,7 @@ class PaymentGatewayStore extends Model {
     * @Added Date : Dec 27, 2019
     */
 	
-	public static function getPaymentGatewayParameterValues($payment_gateway_id,$orgId) {
+	public static function getPaymentGatewayParameterValues($payment_gateway_id = null,$orgId = null) {
 		
 		//SELECT `store_payment_gateway_values`.`payment_gateway_parameter_value`, `store_payment_gateway_values`.`payment_gateway_parameter_id` , `payment_gateway_parameters`.`parameter_name`,`payment_gateway_parameters`.`parameter_id` FROM `store_payment_gateway_values` LEFT JOIN payment_gateway_parameters on `store_payment_gateway_values`.`payment_gateway_id` = `payment_gateway_parameters`.`payment_gateway_id` where `store_payment_gateway_values`.`payment_gateway_id` = '1' group by `store_payment_gateway_values`.`payment_values_id`	
 
@@ -81,23 +81,34 @@ group by payment_gateway_parameters.parameter_id
             'store_payment_gateway_values.payment_gateway_id', 
             'store_payment_gateway_values.payment_gateway_parameter_id', 
             'store_payment_gateway_values.payment_gateway_parameter_value')
-            ->leftJoin('store_payment_gateway_values', function($join)
+            ->leftJoin('store_payment_gateway_values', function($join) use($orgId)
               {
                   $join->on('store_payment_gateway_values.payment_gateway_id', '=', 'payment_gateway_parameters.payment_gateway_id');                     
-                  $join->on('payment_gateway_parameters.parameter_id', '=', 'store_payment_gateway_values.payment_gateway_parameter_id');                     
-              })
-                ->where(function($query)use($orgId) {
-                    /** @var $query Illuminate\Database\Query\Builder  */
-                    return $query->where('store_payment_gateway_values.orgId',$orgId)
-                    ->orWhereNull('store_payment_gateway_values.orgId');
-                            // ->orWhere('store_payment_gateway_values.orgId', 'is NULL');
-                })
-                ->where('payment_gateway_parameters.payment_gateway_id', '=', $payment_gateway_id)
-                ->groupBy("payment_gateway_parameters.parameter_id")
-                ->get();
+                  $join->on('payment_gateway_parameters.parameter_id', '=', 'store_payment_gateway_values.payment_gateway_parameter_id');
+
+                  $join->where(function($query)use($orgId) {
+                        /** @var $query Illuminate\Database\Query\Builder  */
+                        return $query->where('store_payment_gateway_values.orgId',$orgId)
+                        ->orWhereNull('store_payment_gateway_values.orgId');
+                                // ->orWhere('store_payment_gateway_values.orgId', 'is NULL');
+                    });                     
+              });
+                
+                    $result->where(function($query)use($orgId) {
+                        /** @var $query Illuminate\Database\Query\Builder  */
+                        return $query->where('store_payment_gateway_values.orgId',$orgId)
+                        ->orWhereNull('store_payment_gateway_values.orgId');
+                                // ->orWhere('store_payment_gateway_values.orgId', 'is NULL');
+                    });    
+                
+                
+                $result->where('payment_gateway_parameters.payment_gateway_id', '=', $payment_gateway_id)
+                ->groupBy("payment_gateway_parameters.parameter_id");
+
+                $finalResult = $result->get();
 		// dd(DB::getQueryLog($result));		
 				
-        return $result;
+        return $finalResult;
     }
 	
 	

@@ -18,9 +18,9 @@
                         ?>
                         <tr>
                             <td class="text-center"><input type="checkbox" onclick='checkcheckbox();' class="addcontacttogroup" id="{{$selectShowAddContactsList[$i]->id}}" name="{{$selectShowAddContactsList[$i]->id}}" value="{{$selectShowAddContactsList[$i]->id}}"></td>
-                            <td>{{$selectShowAddContactsList[$i]->c_email}}</td>
-                            <td>{{$selectShowAddContactsList[$i]->c_f_name}}</td>
-                            <td>{{$selectShowAddContactsList[$i]->c_l_name}}</td>
+                            <td>{{$selectShowAddContactsList[$i]->email}}</td>
+                            <td>{{$selectShowAddContactsList[$i]->first_name}}</td>
+                            <td>{{$selectShowAddContactsList[$i]->last_name}}</td>
                         </tr>    
                         <?php
                         // $i++;

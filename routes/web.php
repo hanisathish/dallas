@@ -36,6 +36,7 @@ Route::post('customerpwdstore', 'PassportController@customerPwdStore');
 Route::post('check_unique_org_domain', 'PassportController@checkOrganizationDomain');
 Route::post('check_unique_email', 'PassportController@checkUniqueEmail');
 Route::post('check_unique_email_per_org', 'PassportController@checkUniqueEmailPerOrganization');
+Route::post('check_unique_username', 'PassportController@checkUniqueUsername');
 
 
 
@@ -457,9 +458,14 @@ Route::post("/settings/mycontactgroup/list", "Settings\MyContactGroupController@
 
 Route::post("/settings/mycontactgroup/store", "Settings\MyContactGroupController@store");
 Route::get("/settings/mycontactgroup/showgrp/{groupid?}", "Settings\MyContactGroupController@showGroup");
-Route::post("/settings/mycontactgroup/list_contacts", "Settings\MyContactGroupController@getGroupContactsList");
-Route::get("/settings/mycontactgroup/showaddcontacts/{groupid?}", "Settings\MyContactGroupController@showAddContacts");
+// Route::post("/settings/mycontactgroup/list_contacts", "Settings\MyContactGroupController@getGroupContactsList");
+Route::post("/settings/mycontactgroup/list_contacts", "UserController@getUserContactData");
+// Route::get("/settings/mycontactgroup/showaddcontacts/{groupid?}", "Settings\MyContactGroupController@showAddContacts");
+Route::get("/settings/mycontactgroup/showaddcontacts/{groupid?}", "UserController@showAddUserContacts");
 Route::post("/settings/mycontactgroup/list_showaddcontacts", "Settings\MyContactGroupController@getAddContactsList");
+
+
+
 Route::post("settings/addcontactstogroup", "Settings\MyContactGroupController@addContactsToGroup");
 Route::post("settings/addcontactstomeetingsparttable", "Settings\MyContactGroupController@addContactsToMeetingsPartTable");
 

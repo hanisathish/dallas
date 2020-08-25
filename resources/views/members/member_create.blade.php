@@ -53,7 +53,7 @@
         }
         
         ?>
-        <img class="d-flex mr-2 rounded-circle img-thumbnail thumb-lg" src="{{$profile_pic_image}}" alt="Generic placeholder image">
+        <img class="d-flex mr-2 rounded-circle img-thumbnail thumb-lg" src="{{$profile_pic_image}}" alt="">
     </div>
     <div class="col-sm-2 col-lg-2 col-md-2 divcols" >
         <label>Prefix</label>
@@ -130,9 +130,10 @@
 
     <div class="col-sm-3 col-lg-3 col-md-3 divcols" >
         <label>&nbsp;</label>
-        <select class="form-control" name="life_stage" id="life_stage">
-            <option value="Adult">Adult</option>
-            <option value="Child">Child</option>
+        <select class="form-control" name="life_stage" id="life_stage" onchange="javascript:showAdultDiv(this)">
+            <option value="">--Select--</option>
+            <option {{ (isset($user) && $user->life_stage=="Adult")?'selected':''}} value="Adult">Adult</option>
+            <option {{ (isset($user) && $user->life_stage=="Child")?'selected':''}} value="Child">Child</option>
             </select>
         
     </div>
@@ -140,8 +141,8 @@
         <label>Gender</label>
         <select class="form-control" name="gender" id="gender">
             <option value="">--Select--</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
+            <option {{ (isset($user) && $user->gender=="Male")?'selected':''}} value="Male">Male</option>
+            <option {{ (isset($user) && $user->gender=="Female")?'selected':''}} value="Female">Female</option>
         </select>
         
     </div>
@@ -172,9 +173,10 @@
         </div><!-- input-group -->
     </div> 
 
-    <div class="col-sm-3 col-lg-3 col-md-3 divcols" >
+    <div class="col-sm-3 col-lg-3 col-md-3 divcols schooldiv" >
         <label>School</label>
         <select class="form-control" name="school_name" id="school_name">
+            <option value="">--Select--</option>
             @foreach($school_name as $value)
             <option {{ (isset($user) && $user->school_name==$value->mldId)?'selected':''}} value="{{$value->mldId}}">{{$value->mldValue}}</option>
             @endforeach
@@ -182,9 +184,10 @@
         
     </div>
 
-    <div class="col-sm-3 col-lg-3 col-md-3 divcols" >
+    <div class="col-sm-3 col-lg-3 col-md-3 divcols gradediv" >
         <label>Grade</label>
         <select class="form-control" name="grade_id" id="grade_id">
+            <option value="">--Select--</option>
             @foreach($grade_id as $value)
             <option {{ (isset($user) && $user->grade_id==$value->mldId)?'selected':''}} value="{{$value->mldId}}">{{$value->mldValue}}</option>
             @endforeach
@@ -233,7 +236,32 @@
 </style>        
 
  <!-- Plugins Init js -->
-        
+@section('js_script')
+    <script type="text/javascript">
+        var life_stageVal = $("#life_stage option:selected").val();
+        if(life_stageVal == 'Adult'){
+            $('.gradediv').hide();
+            $('.schooldiv').hide();
+            $('#school_name').val('');
+            $('#grade_id').val('');                
+        }else{
+            $('.gradediv').show();
+            $('.schooldiv').show();
+        }
+        function showAdultDiv(obj){
+            var life_stage = obj.value;
+            if(life_stage == 'Adult'){
+                $('.gradediv').hide();
+                $('.schooldiv').hide();
+                $('#school_name').val('');
+                $('#grade_id').val('');                
+            }else{
+                $('.gradediv').show();
+                $('.schooldiv').show();
+            }
+        }
+    </script>
+@endsection        
         
 @endsection                
 

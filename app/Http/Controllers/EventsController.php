@@ -199,7 +199,7 @@ class EventsController extends Controller
         //dd($whereArray);
         $crudEvents = Events::crudEvents($whereArray,null,null,null,null,null,null,'1')->get();
         //dd($crudEvents->toArray());
-        $html = "<select name='event_id' id='event_id' class='form-control' ><option>--Select--</option>";
+        $html = "<select name='event_id' id='event_id' class='form-control' ><option value=''>--Select--</option>";
         if($crudEvents->count() > 0){
             
             foreach ($crudEvents as $crudEventsvalue) {

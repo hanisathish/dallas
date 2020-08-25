@@ -50,9 +50,15 @@
                             </div>
 
                             <div class="form-group text-center m-t-20">
-                                <div class="col-12">
+                            <div class="form-group m-t-10 mb-0 row">
+                                <div class="col-sm-4 m-t-20">
+                                    <a class="btn btn-primary btn-block waves-effect waves-light" href="{{URL::asset('login').'/'.$crudOrganizationData[0]->orgDomain}}"  ><i class="fa  fa-arrow-left "></i>  GoBack</a>
+                                </div>
+                                <div class="col-sm-8 m-t-20">
                                     <button class="btn btn-info btn-block waves-effect waves-light" id="btnforgotPassword" type="button">Submit</button>
                                 </div>
+                            </div>
+                                
                             </div>
 
                         </form>

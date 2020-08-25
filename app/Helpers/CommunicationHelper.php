@@ -26,12 +26,15 @@ class CommunicationHelper {
      * createdUserId: loggedin user id
      * toUserIdsArray: 
      */ 
-    public static function generateCommunications($tag='', $orgId, $type =2, $createdUserId, $ToUserIdsArray, $related_id = null){
+    public static function generateCommunications($tag='', $orgId, $type =2, $createdUserId, $ToUserIdsArray, $related_id = null, $messageData = null){
         $template = CommTemplate::where('tag', $tag)->where('org_id', $orgId)->first();
         if(empty($template)){
             $template = (new static)->addCommTemplateToOrg($tag, $orgId);
         }
-
+        if($messageData){
+            $template->subject = $messageData['subject'];
+            $template->body = $messageData['body'];
+        }
         $commMaster = CommMaster::create([
                         'comm_template_id' => $template->id,
                         'org_id' => $orgId,

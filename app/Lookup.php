@@ -15,7 +15,7 @@ class Lookup extends Model
     $data = Lookup::select('mldId', 'orgId', 'mldKey', 'mldValue', 'mldType', 'mldOption')
                 ->where('orgId', $orgId)
                 ->whereIn('mldKey', $keys)
-                ->orderBy('mldValue', 'asc')
+                ->orderBy('mldOrder', 'asc')
                 ->get();
     return Lookup::filterData($data, $keys);
   }

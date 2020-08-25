@@ -167,81 +167,113 @@ class BulkUploadController extends Controller
                 }else if($request->input('bulk_upload_type') == 'member_bulk'){
                     $rolesAdminData = DB::table('roles')->where('orgId',$this->userguard->orgId)->where('role_tag','member')->get();
                     if($countheader == 4  && in_array('email',$headerRow) && in_array('first_name',$headerRow) && in_array('last_name',$headerRow) && in_array('mobile',$headerRow)){
-                        foreach ($data as $key => $value) {
-                            if($value->email && $value->first_name){
-                                $randomString = strtolower(str_random(4));
-                                $referal_code = substr($value->first_name, 0, 4) . $randomString;
-                                $username = strtolower(preg_replace('/[^a-zA-Z0-9\']/', '', substr($value->first_name, 0, 4)). $randomString);
+                        // foreach ($data as $key => $value) {
+                        //     if($value->email && $value->first_name){
+                        //         $randomString = strtolower(str_random(4));
+                        //         $referal_code = substr($value->first_name, 0, 4) . $randomString;
+                        //         $lastUserId = UserMaster::orderBy('id','DESC')->first();
+                        //         $newPersonal_id = str_pad($lastUserId->id + 1, 10, "0", STR_PAD_LEFT);
 
+                        //         $insert[] = ['email' => $value->email, 'first_name' => $value->first_name, 'last_name' => $value->last_name,'mobile_no' => $value->mobile, 'orgId' => $this->userguard->orgId, 'householdName' => $value->first_name."'s household", 'personal_id' => $newPersonal_id, 'referal_code' => $referal_code, 'password' => bcrypt('123456')];
+                        //         // $insertIdUser = User::create($insert);
 
-                                $lastUserId = UserMaster::orderBy('id','DESC')->first();
-                                $newPersonal_id = str_pad($lastUserId->id + 1, 10, "0", STR_PAD_LEFT);
-
-                                $insert = ['email' => $value->email, 
-                                    'first_name' => $value->first_name, 
-                                    'last_name' => $value->last_name,
-                                    'mobile_no' => $value->mobile, 
-                                    'orgId' => $this->userguard->orgId, 
-                                    'householdName' => $value->first_name."'s household", 
-                                    'personal_id' => $newPersonal_id, 
-                                    'referal_code' => $referal_code, 
-                                    'password' => bcrypt('123456'),
-                                    'username' => $username
-                                    ];
-                                 $insertIdUser = User::create($insert);
-
-                                //model has role insert bulk
-                                $insertMHRArray[] = ['role_id'=>$rolesAdminData[0]->id,'model_type'=>'App\User','model_id'=>$insertIdUser->id];
-                                $arrayUserIds[] = $insertIdUser->id;
-                            }                            
-                        }
-                        // dd($arrayUserIds);
+                        //         //model has role insert bulk
+                        //         // $insertMHRArray[] = ['role_id'=>$rolesAdminData[0]->id,'model_type'=>'App\User','model_id'=>$insertIdUser->id];
+                                
+                        //     }                            
+                        // }
+                        
                         // $insertIdUser = User::insert($insert);
 
-                        if(!empty($insertMHRArray)){ 
-                            ModelHasRoles::insert($insertMHRArray);
-                        }
+                        // if(!empty($insertMHRArray)){ 
+                        //     ModelHasRoles::insert($insertMHRArray);
+                        // }
 
-                        //start of group contact map
-                        //insert into group if group name is entered
-                        if($request->input('group_id')){
-                            $group_id = $request->input('group_id');
-                            if($request->input('grp_name_enter')){
-
-                                $myContactGroupFormData = $request->except('bulk_upload_type','group_id','import_file');
-
-                                if($this->userguard->roles[0]->name == "superadmin"){
-                                    $myContactGroupFormData['orgId'] = $this->userguard->orgId;
-                                }else{
-                                    $myContactGroupFormData['orgId'] = $this->userguard->orgId;
-                                }
-                                $myContactGroupFormData['createdBy'] = $this->userguard->id;
-
-                                $myContactGroupFormData['group_name'] = $request->input('grp_name_enter');
-                                
-                                $insertMyContactGroupDetails = MyContactGroup::create($myContactGroupFormData);
-                                $group_id = $insertMyContactGroupDetails->id;
-                            }
-
-                            if($arrayUserIds){
-                                foreach($arrayUserIds as $arrayUserIdsVal){
-                                    $insertGroupToContact[] = array(
-                                        'contact_list_id'   =>  $arrayUserIdsVal,
-                                        'contact_group_id'  =>  $group_id,
-                                        'createdBy'         =>  $this->userguard->id
-                                    );
-                                }
-
-                                $insertCGM = ContactGroupMap::insert($insertGroupToContact);
-
-                            }  
-
-                        }
-
-                        //end of group contact map
                         ///////////////////
-                         
                         /*
+                        $connect =  DB::connection()->getPdo();
+                        $total_row = count(file($_FILES['import_file']['tmp_name']));
+                        $file_location = str_replace("\\", "/", $_FILES['import_file']['tmp_name']);
+                        
+                        $query_2 = " SELECT MAX(id) as user_id FROM users ";
+                        
+                        $query_2_prep =  $connect->prepare($query_2);
+
+                        $query_2_prep->execute();
+                        $result = $query_2_prep->fetchAll(\PDO::FETCH_ASSOC);
+                        $user_id = 0;
+                        
+                        foreach($result as $row)
+                        {
+                            $user_id = $row['user_id'];
+                        }
+                        
+                        $first_user_id = $user_id;// - $total_row;
+                        
+                        $first_user_id = $first_user_id + 1;
+                        
+                        $query_3 = 'SET @user_id:='.$first_user_id.'';
+                        
+                        $connect->exec($query_3);
+
+                        $query_21 = " SELECT MAX(personal_id) as personal_id FROM users ";
+                        
+                        $query_21_prep =  $connect->prepare($query_21);
+
+                        $query_21_prep->execute();
+                        $result21 = $query_21_prep->fetchAll(\PDO::FETCH_ASSOC);
+                        $pers_id = 0;
+                        
+                        foreach($result21 as $row)
+                        {
+                            $pers_id = str_pad($row['personal_id'] + 1, 10, "0", STR_PAD_LEFT);
+                        }
+
+                        $first_pers_id = $pers_id;// - $total_row;
+                        
+                        $first_pers_id = $first_pers_id + 1;
+
+                        $rere = str_pad($user_id + 1, 10, "0", STR_PAD_LEFT);
+                        
+                        $query_31 = 'SET @pers_id:='.$rere;
+                        // dd($query_31);
+                        $connect->exec($query_31);
+
+
+                        // $newPersonal_id = str_pad($pers_id + 1, 10, "0", STR_PAD_LEFT);
+
+                        $hs="s household";
+
+                        $pp = bcrypt("123456");    
+                        $query_1 = '
+                        LOAD DATA LOCAL INFILE "'.$file_location.'" IGNORE 
+                        INTO TABLE users 
+                        FIELDS TERMINATED BY "," 
+                        LINES TERMINATED BY "\r\n" 
+                        IGNORE 1 LINES 
+                        (@column1,@column2,@column3,@column4) 
+                        SET email = @column1, first_name = @column2,  last_name = @column3, mobile_no = @column4, 
+                            orgId = "'.$this->userguard->orgId.'" ,
+                            password = "'.$pp.'", householdName = @column2 ,
+                            personal_id = 000001233
+
+                        ';//@pers_id:=@pers_id
+                        $connect->exec($query_1);
+                        $query_4 = '
+                        LOAD DATA LOCAL INFILE "'.$file_location.'" IGNORE 
+                        INTO TABLE model_has_roles 
+                        FIELDS TERMINATED BY "," 
+                        LINES TERMINATED BY "\r\n" 
+                        IGNORE 1 LINES 
+                        (@column1,@column2,@column3,@column4) 
+                        SET role_id = "'.$rolesAdminData[0]->id.'", model_type = "App\User", model_id = @user_id:=@user_id+1
+                        ';
+                        
+                        $connect->exec($query_4);
+                        
+                        */
+                        ///////////////////
+
                         //try 3333333333333
                         $bcryptPassword = bcrypt("123456");
                         
@@ -422,7 +454,7 @@ class BulkUploadController extends Controller
                         $statement->execute();
                         
                         //end of model has role insert
-                        */
+                        
                         
 
                         ////end of try 33333333

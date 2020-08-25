@@ -76,7 +76,7 @@
                                 </div>
                                 @endif
                                 <!-- -->
-                                <form method="post" enctype="multipart/form-data" action="{{ route('message.store') }}">
+                                <form method="post" enctype="multipart/form-data" action="{{ route('message.store') }}" id='sendMessageForm' name='sendMessageForm'>
                                     @csrf
                                     <div class="form-group">
                                         <label>Select Groups:</label>
@@ -183,6 +183,47 @@
 
         <!--Summernote js-->
         <script src="{{ URL:: asset('assets/theme/plugins/summernote/summernote-bs4.min.js')}}"></script>
+
+        <script>
+            $(document).ready(function() {
+                chkValidateStatus = "";
+                chkValidateStatus = $("#sendMessageForm").validate({
+                    //ignore:[],// false,
+                    
+                    ignore: false,
+                    errorClass: "error",
+                    rules: {
+                        "grp_ids[]": { 
+                            required: true, 
+                            minlength: 1 
+                        } ,
+                        sent_from_user: {
+                            required: true
+                        },
+                        camp_subject: {
+                            required: true
+                        },
+                        camp_message: {
+                            required: true
+                        }
+                    },
+                    messages: {
+                        "grp_ids[]": "Please select at least one group."
+                        ,
+                        sent_from_user: {
+                            required: "Please select From Name/Email:"
+                        },
+                        camp_subject: {
+                            required: "Please enter Subject"
+                        },
+                        camp_message: {
+                            required: "Please enter Message"
+                        }
+                    }
+                });
+            });
+
+        </script>
 
         <script>
             jQuery(document).ready(function(){

@@ -27,8 +27,9 @@
                     <div class="col-sm-3">
                         <input type="text" id="group_name" name="group_name" class="form-control" required>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-6">
                         <button class="btn btn-md btn-primary addGroup" id="addGroup"><i class="fa fa-plus"></i> Add Group</button>
+                        <a href="{{ route('bulkupload.index') }}"   class="btn btn-md btn-warning"   data-original-title="Add Contact"><i class="fa fa-upload"></i>  Bulk Upload Contact</a>
                     </div>
                 </div> 
                           
@@ -55,7 +56,7 @@
 
 <div class="clearfix"></div>
 
-<div class="row">
+<div class="row" style="display: none;">
     <div class="col-12">
         <div class="card m-b-30">
             <div class="card-body">

@@ -35,23 +35,23 @@
 									</div>
 							
 								   <div class="form-group row">
-										<label for="example-text-input" class="col-sm-2 col-form-label">Current Password</label>
-										<div class="col-sm-10">
+										<label for="example-text-input" class="col-sm-3 col-form-label">Current Password</label>
+										<div class="col-sm-6">
 											{!! Form::password('cur_pwd',['id'=>'cur_pwd','autocomplete'=>'off','placeholder' => 'Current Password','class'=>'form-control']) !!}
 										</div>
 								   </div>
 
                                     <div class="form-group row">
-										<label for="example-text-input" class="col-sm-2 col-form-label">New Password</label>
-										<div class="col-sm-10">
+										<label for="example-text-input" class="col-sm-3 col-form-label">New Password</label>
+										<div class="col-sm-6">
 											{!! Form::password('new_pwd',['id'=>'new_pwd','autocomplete'=>'off','placeholder' => 'New Password','class'=>'form-control']) !!}
 										</div>
 								   </div>
 
 
                                     <div class="form-group row">
-										<label for="example-text-input" class="col-sm-2 col-form-label">Confirm Password</label>
-										<div class="col-sm-10">
+										<label for="example-text-input" class="col-sm-3 col-form-label">Confirm Password</label>
+										<div class="col-sm-6">
 											 {!! Form::password('rep_pwd',['id'=>'rep_pwd','autocomplete'=>'off','placeholder' => 'Confirm Password','class'=>'form-control']) !!}
 										</div>
 								   </div>								   

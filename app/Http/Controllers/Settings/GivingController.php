@@ -141,13 +141,14 @@ class GivingController extends Controller
             if(strtotime($crudEventsvalue->eventCreatedDate) >= strtotime(date('Y-m-d')))
             {
                 //dd($crudEventsvalue->eventCreatedDate);$key=>
-                $eventsData[] = $crudEventsvalue;
+                // $eventsData[] = $crudEventsvalue;
+                $eventsData[] = date('j-n-Y',strtotime($crudEventsvalue->eventCreatedDate));
             }
             
         }
         //dd(count($eventsData));
         $data['upcoming_events']=$eventsData;
-        //dd($data['upcoming_events']);
+        // dd($data['upcoming_events']);
         //dd($data['team_id']->get()->toArray(),$whereTeamArray);
         
         if($giving_id){

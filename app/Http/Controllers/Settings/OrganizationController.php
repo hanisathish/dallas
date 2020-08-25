@@ -181,10 +181,10 @@ class OrganizationController extends Controller {
                 //Insert into master_lookup_data table
                 $selectMasterLookupData = MasterLookupData::where('orgId',0)
                   //->where('role_tag','!=','superadmin')
-                  ->select(array(DB::raw("'$insertOrganization->orgId'"),'mldKey','mldValue','mldType','mldOption',DB::raw("'$todaysDate'"),DB::raw("'$todaysDate'")));
+                  ->select(array(DB::raw("'$insertOrganization->orgId'"),'mldKey','mldValue','mldType','mldOption','mldOrder',DB::raw("'$todaysDate'"),DB::raw("'$todaysDate'")));
                 
                 
-                DB::table('master_lookup_data')->insertUsing(['orgId','mldKey','mldValue','mldType','mldOption','created_at','updated_at'], $selectMasterLookupData);
+                DB::table('master_lookup_data')->insertUsing(['orgId','mldKey','mldValue','mldType','mldOption','mldOrder','created_at','updated_at'], $selectMasterLookupData);
                 //////
                 
                 // $request['roles'] = 2;

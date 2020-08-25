@@ -8,6 +8,10 @@ $(document).ready(function () {
         ignore: false,
         errorClass: "error",
         rules: {
+            username: {
+                required: true,
+                uniqueUsername:true
+            },
             orgId: {
                 required: true                
             },
@@ -17,7 +21,7 @@ $(document).ready(function () {
             email: {
                 required: true,
                 email:true,
-                uniqueEmailPerOrganization:true
+                // uniqueEmailPerOrganization:true
             },
             password: {
                 required: true,
@@ -31,6 +35,9 @@ $(document).ready(function () {
             }
         },
         messages: {
+            username: {
+                required: "Username is missing"
+            },
             orgId: {
                 required: "Oraganization name is missing"
             },
@@ -53,7 +60,7 @@ $(document).ready(function () {
 });
  
 
-//DUPLICATE BRANCH CODE WITH SAME ACCOUNT HEAD TYPE VALIDATION
+//Check for unique email id
     $.validator.addMethod("uniqueEmailPerOrganization", function(ahSiteId, element) {
         //alert('ss');
         var mydata1 = null;
@@ -106,3 +113,27 @@ $('#memberCreateForm').submit(function (e) {
     
     }
 });
+
+//Check for unique username throught application
+$.validator.addMethod("uniqueUsername", function(ahSiteId, element) {
+    //alert('ss');
+    var mydata1 = null;
+    var orgId = $.trim($('#orgId').val());
+    var username = $.trim($('#username').val());
+    
+    var dataString = 'orgId='+orgId+'&username='+username;
+    //alert(dataString);
+    $.ajax({
+        type: "POST",
+        async: false,
+        data: dataString,
+        url: siteUrl+'/check_unique_username',
+        success: function(data){
+            //alert(data);
+            if (data == "found"){
+                mydata1 = data;
+            }
+        }
+    });
+    return (mydata1 != "found");
+}, 'This Username is already exist. Choose any other username please.');

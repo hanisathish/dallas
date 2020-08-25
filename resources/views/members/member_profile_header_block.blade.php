@@ -16,7 +16,7 @@
                                 }
                                 ?>
                                 <div id="upload-demo-i" class="d-flex mr-3 rounded-circle">
-                                <img class="d-flex mr-3 rounded-circle" src="{{$profile_pic_image}}" alt="Generic placeholder image" height="128">
+                                <img class="d-flex mr-3 rounded-circle" src="{{$profile_pic_image}}" alt="" height="128">
 
                                 </div>
                                 @if(isset($isCommPage) && $isCommPage)
