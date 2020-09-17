@@ -156,6 +156,7 @@ Route::post('/api/people/member/households/get-users-search', 'MemberController@
 Route::post("/api/people/member/households/create-new", 'MemberController@createNewHousehold');
 Route::post("/api/people/member/households/remove-household", 'MemberController@removeHousehold');
 Route::post("/api/people/member/households/update-household", 'MemberController@updateHousehold');
+Route::post("/people/othethhuserlist", 'CheckinController@loadHHOtherUsers');
 
 //Role
 Route::get('role_management', 'RoleController@index');
@@ -486,3 +487,17 @@ Route::post('importExcel', 'ImportExcelController@importExcel')->name('import_ex
  
 //Cron batch mail
 Route::get('cronbatchemail', 'CronBatchEmailController@index'); 
+
+//Crons
+// CronTaskController
+Route::get('sendbirthdaywishes', 'CronTaskController@sendBirthdayWishes'); 
+Route::get('sendanniversarywishes', 'CronTaskController@sendAnniversaryWishes'); 
+
+// Settings => Sms
+Route::get("/settings/sms", "Settings\SMSController@index");
+Route::get("/settings/sms/create_page", "Settings\SMSController@createSMS")->name('sms.create_page');
+Route::post('sms/store', 'Settings\SMSController@store')->name('sms.store');
+Route::post('settings/sms/list', 'Settings\SMSController@list');
+Route::get('sms/edit/{id}', 'Settings\SMSController@edit');
+
+Route::post('api/sms/pushUrl', 'CommonController@pushSMSUrl');

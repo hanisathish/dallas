@@ -135,12 +135,12 @@ class MyContactGroup extends Model  {
         $query = MyContactGroup::select('contact_group.id', 'contact_group.group_name',
                 DB::raw('(select count(contact_group_map.`contact_group_id`) from contact_group_map where contact_group_map.`contact_group_id`=contact_group.id) as grpcontactcount'));
 
-        $query->leftJoin('contact_list', function($join) {
-            $join->on("contact_group.id", "=", "contact_list.id");
-        });
+        // $query->leftJoin('contact_list', function($join) {
+        //     $join->on("contact_group.id", "=", "contact_list.id");
+        // });
 
         $query->leftJoin('contact_group_map', function($join) {
-            $join->on("contact_group_map.contact_list_id", "=", "contact_list.id");
+            // $join->on("contact_group_map.contact_list_id", "=", "contact_list.id");
             $join->on("contact_group.id", "=", "contact_group_map.contact_group_id");
         });
 

@@ -180,6 +180,7 @@ class BulkUploadController extends Controller
                                 $insert = ['email' => $value->email, 
                                     'first_name' => $value->first_name, 
                                     'last_name' => $value->last_name,
+                                    'full_name' => $value->first_name." ".$value->last_name, 
                                     'mobile_no' => $value->mobile, 
                                     'orgId' => $this->userguard->orgId, 
                                     'householdName' => $value->first_name."'s household", 

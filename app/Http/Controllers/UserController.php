@@ -328,7 +328,7 @@ class UserController extends Controller {
                 if($user->chId == null || $user->chId == "null"){
                     $disabled = false;
                 }
-                $users[] = array("text"=>$user->first_name." ".$user->last_name,"id"=>$user->id,"disabled"=>$disabled);
+                $users[] = array("life_stage"=>$user->life_stage,"text"=>$user->first_name." ".$user->last_name,"id"=>$user->id,"disabled"=>$disabled);
             }
 		//print_r($usersList);
 
@@ -554,9 +554,9 @@ class UserController extends Controller {
         $whereArray = array('contact_group_map.contact_group_id' => $groupId);
         //dd($whereArray);
         if($this->userguard->roles[0]->name == "superadmin"){
-            $selectShowAddContactsList  = DB::select( DB::raw(" SELECT users.id,users.email,users.first_name,users.last_name FROM users  WHERE  users.id not in(select contact_group_map.contact_list_id from contact_group_map  where contact_group_map.contact_group_id='$groupId')") );
+            $selectShowAddContactsList  = DB::select( DB::raw(" SELECT users.id,users.email,users.first_name,users.last_name,users.mobile_no FROM users  WHERE  users.id not in(select contact_group_map.contact_list_id from contact_group_map  where contact_group_map.contact_group_id='$groupId')") );
         }else{
-            $selectShowAddContactsList  = DB::select( DB::raw(" SELECT users.id,users.email,users.first_name,users.last_name FROM users  WHERE  users.orgId = '".$this->userguard->orgId."' 
+            $selectShowAddContactsList  = DB::select( DB::raw(" SELECT users.id,users.email,users.first_name,users.last_name,users.mobile_no FROM users  WHERE  users.orgId = '".$this->userguard->orgId."' 
             and users.id not in(select contact_group_map.contact_list_id from contact_group_map  where contact_group_map.contact_group_id='$groupId')") );
         }
 

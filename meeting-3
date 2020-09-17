@@ -155,3 +155,27 @@ In Adult select - hide school and grade
 
 --> giving page error , add stripe integrate
 
+
+-------------
+25 Aug 2020 , meeting points
+
+1. Richard - to_user_id - error due to change in email suspect
+2. Send message with image , content avaolable but image missing also sender name is pointing to old email itself
+3. SMS display detailed report with sent details, show the status of delivered/undelivered
+4. Possibility of integrating https://simpletexting.com/, which has option of keyword(templating integration)
+
+5. Communication auto sender
+	Birthday - wishes
+	Anniversary - wishes
+	New Member - notify
+	Groups - Member signup
+	Groups - Sugnup Event send reminder
+
+	--- CHeck old req sheet
+
+6. Checkin
+	If child show the list of hosusehold with radio option, along with guest-> if guest take name,email,mobile 
+		And send notification to respective selected radio option	selected and if its guest send to household primary member notification else the selected hosueholds primary member
+
+
+7. Isseu house hold always checks for full name column

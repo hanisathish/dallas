@@ -154,5 +154,71 @@ class CustomHelperFunctions {
         return $data;
     }
      
+
+
+    /**
+     * @Function name : sendSMS
+     * @Purpose : Unset the keys from an array,whose value is empty
+     * @Added by : Sathish
+     * @Added Date : Nov 27, 2018
+     */    
+    public static function sendSMS($data) {
+        //Multiple mobiles numbers separated by comma
+        $receiver_mobile = $data['receiver_mobile'];
+        
+        //Your message to send, Add URL encoding here.
+        $message = urlencode($data['message']);
+        
+        //Your authentication key
+        $authKey = $data['authKey'];        
+
+        //Sender ID,While using route4 sender id should be 6 characters long.
+        $senderId = $data['sms_sender_id'];
+
+
+
+        //Define route 
+        $route = "4";
+        //Prepare you post parameters
+        $postData = array(
+            'authkey' => $authKey,
+            'mobiles' => $receiver_mobile,
+            'message' => $message,
+            'sender' => $senderId,
+            'route' => $route
+        );
+
+        //API URL
+        $url = "http://login.smscentral.in/api/sendhttp.php";
+
+        // init the resource
+        $ch = curl_init();
+        curl_setopt_array($ch, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => $postData
+                //,CURLOPT_FOLLOWLOCATION => true
+        ));
+
+
+        //Ignore SSL certificate verification
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+
+
+        //get response
+        $output = curl_exec($ch);
+
+        //Print error if any
+        if (curl_errno($ch)) {
+            return 'error:' . curl_error($ch);
+            //return "error";
+        }
+
+        curl_close($ch);
+
+        return $output;
+    } 
     
 }

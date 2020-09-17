@@ -181,7 +181,7 @@ return [
         Yajra\DataTables\DataTablesServiceProvider::class,
         Camroncade\Timezone\TimezoneServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
-
+        'Aloha\Twilio\Support\Laravel\ServiceProvider',
 
         // 'Cartalyst\Stripe\Laravel\StripeServiceProvider',
 
@@ -241,6 +241,7 @@ return [
 		'Html' => Collective\Html\HtmlFacade::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'Twilio' => 'Aloha\Twilio\Support\Laravel\Facade',
 
         // 'Stripe' => 'Cartalyst\Stripe\Laravel\Facades\Stripe',
 

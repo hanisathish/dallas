@@ -1165,7 +1165,7 @@ INSERT INTO `comm_templates` (`id`, `tag`, `name`, `subject`, `body`, `org_id`, 
 
 ALTER TABLE `comm_details` CHANGE `updated_at` `updated_at` TIMESTAMP on update CURRENT_TIMESTAMP NULL; 
 
--- Sathish not executed in live - 12 aug 2020
+-- Sathish 12 aug 2020
 ALTER TABLE `comm_details` CHANGE `updated_at` `updated_at` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP; 
 ALTER TABLE `cron_batch_email`  ADD `recipient_user_id` BIGINT(20) NULL DEFAULT NULL  AFTER `cron_id`;
 
@@ -1174,3 +1174,50 @@ ALTER TABLE `master_lookup_data` ADD `mldOrder` INT(10) NOT NULL DEFAULT '0' AFT
 INSERT INTO `comm_templates` (`id`, `tag`, `name`, `subject`, `body`, `org_id`, `createdBy`, `created_at`, `updatedBy`, `updated_at`, `deletedBy`, `deleted_at`) VALUES (NULL, 'message', 'Message', 'Message Sujbect', 'Message Body', '0', NULL, '2019-08-21 18:01:18', NULL, '0000-00-00 00:00:00', NULL, NULL); 
 
 ALTER TABLE `comm_masters` CHANGE `subject` `subject` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `body` `body` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL; 
+
+-- Sathish not executed in live - 28 aug 2020
+INSERT INTO `comm_templates` (`id`, `tag`, `name`, `subject`, `body`, `org_id`, `createdBy`, `created_at`, `updatedBy`, `updated_at`, `deletedBy`, `deleted_at`) VALUES (NULL, 'birthday', 'Birthday Email', 'Birthday Email Sujbect', 'Birthday Email Body', '0', NULL, '2020-07-15 18:45:48', NULL, NULL, NULL, NULL);
+INSERT INTO `comm_templates` (`id`, `tag`, `name`, `subject`, `body`, `org_id`, `createdBy`, `created_at`, `updatedBy`, `updated_at`, `deletedBy`, `deleted_at`) VALUES (NULL, 'anniversary', 'Anniversary Email', 'Anniversary Email Sujbect', 'Anniversary Email Body', '0', NULL, '2020-07-15 18:45:48', NULL, NULL, NULL, NULL);
+INSERT INTO `comm_templates` (`id`, `tag`, `name`, `subject`, `body`, `org_id`, `createdBy`, `created_at`, `updatedBy`, `updated_at`, `deletedBy`, `deleted_at`) VALUES (NULL, 'group_member_signup', 'Group Member Signup Email', 'Group Member Signup Email Sujbect', 'Birthday Email Body', '0', NULL, '2020-07-15 18:45:48', NULL, NULL, NULL, NULL);
+INSERT INTO `comm_templates` (`id`, `tag`, `name`, `subject`, `body`, `org_id`, `createdBy`, `created_at`, `updatedBy`, `updated_at`, `deletedBy`, `deleted_at`) VALUES (NULL, 'group_member_event_reminder', 'Group Member Event Reminder Email', 'Group Member Event Reminder Email Sujbect', 'Birthday Email Body', '0', NULL, '2020-07-15 18:45:48', NULL, NULL, NULL, NULL);
+INSERT INTO `comm_templates` (`id`, `tag`, `name`, `subject`, `body`, `org_id`, `createdBy`, `created_at`, `updatedBy`, `updated_at`, `deletedBy`, `deleted_at`) VALUES (NULL, 'event_child_checkin_notify', 'Event Child Checkin Notify Email', 'Event Child Checkin Notify Email Sujbect', 'Event Child Checkin Notify Email Body', '0', NULL, '2020-07-15 18:45:48', NULL, NULL, NULL, NULL);
+
+
+--
+-- Table structure for table `sendsms`
+--
+
+CREATE TABLE IF NOT EXISTS `sendsms` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `orgId` bigint(20) DEFAULT NULL,
+  `msg_sent_date` datetime DEFAULT NULL,
+  `routetype` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'route=1 for promotional, route=4 for transactional SMS',
+  `country` varchar(20) DEFAULT NULL,
+  `sender_mobile` varchar(255) DEFAULT NULL,
+  `receiver_mobile` varchar(255) DEFAULT NULL,
+  `message` text,
+  `sender_user_id` bigint(20) DEFAULT NULL,
+  `receiver_user_id` bigint(20) DEFAULT NULL,
+  `sms_response` text,
+  `output` text,
+  `request_id` text,
+  `sms_sender_id` varchar(255) DEFAULT NULL,
+  `unicode` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0=English SMS,1=Unicode SMS',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1=Sent,2=Error',
+  `del_status` text,
+  `description` text,
+  `json_data` text,
+  `createdBy` text,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedBy` text,
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+  `deletedBy` text,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+ALTER TABLE `checkins` ADD `notify_user_id` BIGINT( 20 ) NULL DEFAULT NULL AFTER `chKind` ,
+ADD `guest_f_name` VARCHAR( 255 ) NULL DEFAULT NULL AFTER `notify_user_id` ,
+ADD `guest_l_name` VARCHAR( 255 ) NULL DEFAULT NULL AFTER `guest_f_name` ,
+ADD `guest_email` VARCHAR( 255 ) NULL DEFAULT NULL AFTER `guest_l_name` ,
+ADD `guest_mobile` VARCHAR( 255 ) NULL DEFAULT NULL AFTER `guest_email` ;

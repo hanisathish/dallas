@@ -7,6 +7,7 @@
                     <th>Email</th>
                     <th>First Name</th>
                     <th>Last Name</th>
+                    <th>Mobile</th>
                 </tr>
             </thead>
             <tbody>
@@ -21,6 +22,7 @@
                             <td>{{$selectShowAddContactsList[$i]->email}}</td>
                             <td>{{$selectShowAddContactsList[$i]->first_name}}</td>
                             <td>{{$selectShowAddContactsList[$i]->last_name}}</td>
+                            <td>{{$selectShowAddContactsList[$i]->mobile_no}}</td>
                         </tr>    
                         <?php
                         // $i++;

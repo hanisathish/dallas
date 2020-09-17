@@ -7,6 +7,9 @@ use DB;
 use Config;
 use App\Models\Events;
 use App\Models\Checkins;
+use App\Models\Households;
+use App\Helpers\CommunicationHelper;
+
 use DataTables;
 use Auth;
 class CheckinController extends Controller
@@ -26,21 +29,63 @@ class CheckinController extends Controller
 			$data['eventDetails'] = $eventDetails;
 		}
         
+        $whereHHArray = array('users.orgId'=>Auth::user()->orgId, 'users.life_stage'=>'Adult');
+        $whereNotInHHArray = array('household_user.user_id'=>array(Auth::user()->id));
+        // dd($whereHHArray);
+        /*
+    SELECT households.`name` , household_user.user_id, household_user.isPrimary, users.first_name
+FROM 
+
+`households`   
+left join household_user   on household_user.household_id=households.id
+left join users  on users.id=household_user.user_id
+WHERE household_user.user_id!=5
+and households.id in(select household_id from household_user where user_id=5)
+
+group by household_user.user_id
+        */
+
+        
         return view('checkin.index',$data);
     }
     
-    
+    public function loadHHOtherUsers(Request $request) {
+
+        $crudHouseholdsData = DB::table(DB::raw("(SELECT households.`name` , household_user.user_id, household_user.isPrimary, users.first_name  ,
+            if(household_user.isPrimary = 1,household_user.user_id,'') as hhprimaryuserid
+            FROM `households` 
+            left join household_user on household_user.household_id=households.id
+            left join users on users.id=household_user.user_id
+            WHERE household_user.user_id!=".$request->hhuser_id."
+            and users.orgId = ".Auth::user()->orgId."
+            and households.id in(select household_id from household_user where user_id=".$request->hhuser_id.") group by household_user.user_id)  as hhuser"));
+        return json_encode(array('count'=>$crudHouseholdsData->count(), 'result'=>$crudHouseholdsData->get()));
+        // return $crudHouseholdsData;
+        // dd($crudHouseholdsData->count());
+    }
+
     public function logCheckin(Request $request) {
         
         $insertData = array(
             "eventId"=>$request->eventId,
             "user_id"=>$request->userId,
             "chINDateTime"=>date("Y-m-d h:i:s"),
-            "chKind"=>1,
+            "chKind"=>($request->notify_user_id == "guest" ? "Guest" : "Regular"),
+            "notify_user_id"=>($request->notify_user_id == "guest" ? ($request->primaryuserid == "" ? null : $request->primaryuserid) : $request->notify_user_id),
+            "guest_f_name"=>$request->guest_f_name,
+            "guest_l_name"=>$request->guest_l_name,
+            "guest_email"=>$request->guest_email,
+            "guest_mobile"=>$request->guest_mobile,
             "createdBy"=> Auth::id()
         );
-        
+        // dd($insertData);
         Checkins::create($insertData);
+        $checkIsUserIdExist = ($request->notify_user_id == "guest" ? ($request->primaryuserid == "" ? null : $request->primaryuserid) : $request->notify_user_id);
+        if($checkIsUserIdExist){
+            $userIds = array(($request->notify_user_id == "guest" ? $request->primaryuserid : $request->notify_user_id));
+        CommunicationHelper::generateCommunications('event_child_checkin_notify', Auth::user()->orgId, '1', Auth::user()->id, $userIds);    
+        }
+        
         //print_r($request->all());
     }
     

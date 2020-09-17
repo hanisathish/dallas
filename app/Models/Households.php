@@ -17,14 +17,14 @@ class Households extends Model  {
      */
     use SoftDeletes;
     protected $table = 'households';
-    protected $primaryKey = 'hhId';
+    protected $primaryKey = 'id';
 
     /**
      * Attributes that should be mass-assignable.
      *
      * @var array
      */
-    protected $fillable = [ 'hhId', 'orgId', 'hhPrimaryUserId', 'hhdName', 'createdBy', 'created_at', 'updatedBy', 'updated_at', 'deletedBy', 'deleted_at'];
+    protected $fillable = [  'id', 'orgId', 'hhPrimaryUserId', 'name', 'createdBy', 'created_at', 'updatedBy', 'updated_at', 'deletedBy', 'deleted_at'];
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -130,12 +130,12 @@ class Households extends Model  {
     */
     public static function crudHouseholdsData($whereArray=null,$whereInArray=null,$whereNotInArray=null,$whereNotNullArray=null,$whereNullArray=null,$data=null) {
         $query = Households::select('*');
-        $query->leftJoin('household_details', function($join) {
-            $join->on("household_details.hhId", "=", "households.hhId");
+        $query->leftJoin('household_user', function($join) {
+            $join->on("household_user.household_id", "=", "households.id");
         });
         
         $query->leftJoin('users', function($join) {
-            $join->on("household_details.hhdUserId", "=", "users.id");
+            $join->on("household_user.user_id", "=", "users.id");
         });
         if($whereArray){
             $query->where($whereArray);
@@ -162,7 +162,17 @@ class Households extends Model  {
                 $query->whereNull($value);
             }            
         }
-        //$query->groupBy('households.hhId','household_details.hhdId'); 
+        if($data != null){
+            if($data['groupBy'] != null){
+                $query->groupBy($data['groupBy']);    
+            }
+            if($data['orderBy'] != null){
+                foreach($data['orderBy'] as $key=>$value){
+                    //$orderByFiltered = array_filter($value);
+                    $query->orderBy($key,$value);
+                }
+            }    
+        }
         return $query;
         
     }

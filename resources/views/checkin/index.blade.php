@@ -43,11 +43,21 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
+                                        <label>Search member</label>
                                         <input type="text" class="form-control" id="checkInUser" autocomplete="new-password" />
                                         <input type="hidden" class="form-control" id="selectedCheckInUser" />
+
+                                        
                                     </div>
-                                     <div class="col-md-4">
+                                    <div class="col-md-3 adultNotifySelectDiv" id="adultNotifySelectDiv" style="display: none;">
+                                        <label>Member to be notified</label>
+                                        <select id="adultNotifySelect" name="adultNotifySelect" class="form-control" onchange="loadGuestPopUp(this);">
+                                                <option>Notify to </option>
+                                        </select>
+                                    </div>
+                                     <div class="col-md-3">
+                                        <label>&nbsp;</label><br/>
                                          <button class="btn btn-primary" onclick="checkIn({{$eventDetails->eventId}})"  >Add Check-in</button>
                                          <input type="hidden" id="eventId" value="{{$eventDetails->eventId}}" />
                                      </div>
@@ -79,6 +89,49 @@
 
             </div> <!-- end row -->
 
+<!----->
+
+<div class="modal fade bs-example-modal-center" id="guest-modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">        
+        <div class="modal-content modal-dialog-scrollable">
+            <div class="modal-header">
+                <h5 class="modal-title mt-0" id="profilePicModal">Add Guest Contact details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group no-bg">
+                    <label for="" class="col-sm-10 control-label text_align_right" style="text-align: left !important;">First Name</label>
+                    <div class="col-sm-9">
+                        <input class="form-control"  type="text" value="" id="guest_f_name" name="guest_f_name" >
+                    </div>
+                </div>
+                <div class="form-group no-bg">
+                    <label for="" class="col-sm-10 control-label text_align_right" style="text-align: left !important;">Last Name</label>
+                    <div class="col-sm-9">
+                        <input class="form-control"  type="text" value="" id="guest_l_name" name="guest_l_name" >
+                    </div>
+                </div>
+                <div class="form-group no-bg">
+                    <label for="" class="col-sm-10 control-label text_align_right" style="text-align: left !important;">Email</label>
+                    <div class="col-sm-9">
+                        <input class="form-control"  type="text" value="" id="guest_email" name="guest_email" >
+                    </div>
+                </div>
+                <div class="form-group no-bg">
+                    <label for="" class="col-sm-10 control-label text_align_right" style="text-align: left !important;">Mobile</label>
+                    <div class="col-sm-9">
+                        <input class="form-control"  type="text" value="" id="guest_mobile" name="guest_mobile" >
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!---->
 			<script>
 				$( function() {
                                     var eventId = <?= $eventDetails->eventId ?>;
@@ -110,9 +163,22 @@
                                 $('#checkInUser').on('autocomplete.select', function(evt, item) {
 
                                         $("#selectedCheckInUser").val(item.id);
+                                        if(item.life_stage == "Child"){
+                                            // alert("life_stage"+item.life_stage);
+                                            //show popup household_user
+                                            loadHouseHoldOtherUsers(item.id);
+                                            $("#adultNotifySelectDiv").show();
+                                            // $("#hhMemberModal").modal("show");
+
+                                        }else{
+                                            $("#adultNotifySelectDiv").hide();
+                                            $("#adultNotifySelect").val('');
+                                        }
 					//console.log('eventsAutoComplete autocomplete.select');
 					//eventsCodeContainer.text(eventsCodeContainer.text() + 'fired autocomplete.select. item: ' + item + ' value: ' + $(this).val() + '\n');
 				});
+
+        
 
                                    /*console.log(eventId);
 					   var options = {
@@ -195,13 +261,63 @@
   } );
 
 
+    function loadHouseHoldOtherUsers(userid)
+    {           
+        // if ($('#adultNotifySelect').find("option").size() == 1) {  //Check condition here
+            $('#adultNotifySelect').empty().append('<option>select</option>');        
+            $.ajax({
+                url: siteUrl+"/people/othethhuserlist",
+                dataType: 'json',
+                type: 'POST',
+                data: {"hhuser_id": userid},
+                success: function(response) {
+                    
+                    if (response.count > 0)
+                    {
+                        for (i in response.result) {                        
+                            $("#adultNotifySelect").append("<option  value="+response.result[i].user_id+">"+response.result[i].first_name+"</option>");
+
+                            // $('#adultNotifySelect').data('primaryuserid',response.result[i].hhprimaryuserid);
+                            var lastprimaryid = response.result[i].hhprimaryuserid;
+                        }
+
+                        $('#adultNotifySelect').attr("data-primaryuserid",lastprimaryid); //setter
+
+
+                    }
+
+                },
+                error: function(x, e) {
+
+                }
+
+            });
+
+            $("#adultNotifySelect").append("<option value='guest'>Guest</option>");
+        // }
+    }
+
+    $("#adultNotifySelect").change(function () {
+        // alert($(this).val());
+        if ($(this).val() == "guest") {
+            
+            $("#guest-modal").modal('show');
+        } else {
+            $("#guest-modal").modal('hide');
+        }
+    });
   function checkIn(eventId){
       var userId = $("#selectedCheckInUser").val();
+      var adultNotifySelect = $("#adultNotifySelect").val();
       if(userId > 0 ) {
+        var guestdetails= '';
+        
+
             $.ajax({
               type: "POST",
               url: siteUrl+"/checkin/log-checkin",
-              data: {eventId:eventId,userId:userId},
+              data: {eventId:eventId,userId:userId,notify_user_id:$("#adultNotifySelect").val(),guest_f_name:$("#guest_f_name").val(),guest_l_name:$("#guest_l_name").val(),guest_email:$("#guest_email").val(),guest_mobile:$("#guest_mobile").val(),
+                  primaryuserid:$('#adultNotifySelect').attr("data-primaryuserid") },
               cache: false,
               success: function(data){
                  checkinsTable.draw(false);

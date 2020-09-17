@@ -261,7 +261,7 @@ class MyContact extends Model  {
     public static function selectMyContactUserDetail($whereArray=null,$whereInArray=null,$whereNotInArray=null,$whereNotNullArray=null,$whereNullArray=null,$data=null) {
         DB::enableQueryLog();
         $query = ContactGroupMap::select('users.id', 'users.email', 
-                'users.first_name', 'users.last_name', DB::raw('group_concat(DISTINCT contact_group.group_name) as group_name') 
+                'users.first_name', 'users.last_name', 'users.mobile_no', DB::raw('group_concat(DISTINCT contact_group.group_name) as group_name') 
                 );
 
         $query->leftJoin('users', function($join) {

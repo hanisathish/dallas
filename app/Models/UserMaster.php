@@ -224,7 +224,7 @@ class UserMaster extends Model  {
 
 
     public static function getUserListForAutocomplete($search, $eventId = "") {
-        $user = self::select('id', 'first_name', 'last_name')
+        $user = self::select('id', 'first_name', 'last_name','life_stage')
                 ->addSelect("checkins.chId")
                 ->leftJoin("checkins", "checkins.user_id", '=', "users.id")
                 ->where(function($query)use($search) {

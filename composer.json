@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.1.3",
+        "aloha/twilio": "^4.0",
         "camroncade/timezone": "^0.2.0",
         "fideloper/proxy": "^4.0",
         "laravel/framework": "5.8.*",
@@ -18,6 +19,7 @@
         "maatwebsite/excel": "^2.1.0",
         "spatie/laravel-permission": "^2.37",
         "stripe/stripe-php": "^7.46",
+        "twilio/sdk": "5.*",
         "yajra/laravel-datatables-oracle": "^9.4"
     },
     "require-dev": {

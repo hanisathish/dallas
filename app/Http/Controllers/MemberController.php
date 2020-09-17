@@ -217,11 +217,15 @@ class MemberController extends Controller
         // dd($payload['exceptIds']);
         //whereNotIn("id", $payload['exceptIds'])
         $users = User::where('orgId', $orgId)
-                    ->where('full_name', 'LIKE', "%" . $payload['searchStr'] . "%")
+                    ->where('first_name', 'LIKE', "%" . $payload['searchStr'] . "%")
+                    ->orWhere('last_name', 'LIKE', "%" . $payload['searchStr'] . "%")
+                    ->orWhere('middle_name', 'LIKE', "%" . $payload['searchStr'] . "%")
+                    ->orWhere('full_name', 'LIKE', "%" . $payload['searchStr'] . "%")
                     ->orWhere("email", $payload['searchStr'])
                     ->orWhere("mobile_no",$payload['searchStr'])
-                    ->select('id', "full_name","mobile_no", 'email', 'personal_id', 'profile_pic', 'address')
+                    ->select('id', "first_name", "last_name", "middle_name", "full_name","mobile_no", 'email', 'personal_id', 'profile_pic', 'address')
                     ->get();
+                    // dd($users);
         foreach($users as $user){
             $user["address"] = $this->extractAddress($user);
         }

@@ -140,7 +140,8 @@
           //modal.find('.modal-body').html("popgroupname")
         });
  
-   $('#addContactToGroupButton').click(function(){
+   // $('#addContactToGroupButton').click(function(){
+    $('#addContactToGroupButton').on('click', function(e){
 
         var contactadd_arr = [];
         // Read all checked checkboxes

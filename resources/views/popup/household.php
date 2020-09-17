@@ -434,7 +434,7 @@
             searchedUserList.forEach(function(item, index){
                 let block = `<div class="list-group-item list-group-item-action hover-focus"
                                  onClick="pickedUserFromSearchList(${index})">
-                                <h6 class="no-margin">${item.full_name}</h6>
+                                <h6 class="no-margin">${item.first_name} ${item.last_name}</h6>
                                 <p class="text-muted no-padding no-margin">
                                     ${item.mobile_no? item.mobile_no: "No Mobile Number"}
                                 </p>

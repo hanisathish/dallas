@@ -23,7 +23,7 @@ class Checkins extends Model {
      *
      * @var array
      */
-    protected $fillable = ['eventId', 'user_id', 'chINDateTime', 'chOUTDateTime', 'chKind', 'createdBy', 'created_at', 'updatedBy', 'updated_at', 'deletedBy', 'deleted_at'];
+    protected $fillable = [ 'chId', 'eventId', 'user_id', 'chINDateTime', 'chOUTDateTime', 'chKind', 'notify_user_id', 'guest_f_name', 'guest_l_name', 'guest_email', 'guest_mobile', 'createdBy', 'created_at', 'updatedBy', 'updated_at', 'deletedBy', 'deleted_at'];
 
     /**
      * The attributes excluded from the model's JSON form.
