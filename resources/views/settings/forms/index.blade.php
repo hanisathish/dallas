@@ -58,7 +58,7 @@
                     }
                 ],
                 language: {
-                    emptyTable:`<h4 class="text-primary">Forms</h4><p>Create custom forms to easily and securely collect<br/>information from the people in your church.</p><p>Forms will show here afer you create them.</p><a href="/settings/forms/manage" class="btn btn-primary"> New Form</a>`
+                    emptyTable:`<h4 class="text-primary">Forms</h4><p>Create custom forms to easily and securely collect<br/>information from the people in your church.</p><p>Forms will show here afer you create them.</p><a href="${siteUrl + '/settings/forms/manage/'}" class="btn btn-primary"> New Form</a>`
                 },
                 "responsive": true
             });
@@ -69,7 +69,7 @@
                         <p>Create custom forms to easily and securely collect<br/>
                             information from the people in your church.</p>
                         <p>Forms will show here afer you create them.</p>
-                        <a href="/settings/forms/manage" class="btn btn-primary"> New Form</a>
+                        <a href="${siteUrl + '/settings/forms/manage/'}" class="btn btn-primary"> New Form</a>
                     </li>`;
             $("#formGroup").html(El);
         }

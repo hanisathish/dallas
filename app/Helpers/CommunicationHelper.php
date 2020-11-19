@@ -4,6 +4,9 @@ namespace App\Helpers;
 use App\Models\CommTemplate;
 use App\Models\CommMaster;
 use App\Models\CommDetail;
+use App\Models\UserMaster;
+use Auth;
+use App\Models\CronBatchEmail;
 
 class CommunicationHelper {
 /**
@@ -22,7 +25,7 @@ class CommunicationHelper {
      * PARAMETERS LIST
      * tag : Tag name using to pick comm table from comm_template table
      * orgId: using for pick template with using respective tag name
-     * type: [1=> Email comm, 2 => Natification], default notification
+     * type: [1=> Email comm, 2 => Notification], default notification
      * createdUserId: loggedin user id
      * toUserIdsArray: 
      */ 
@@ -52,6 +55,39 @@ class CommunicationHelper {
             $attachUsers[$userId] = ['read_status' => "UNREAD", "delete_status" => "UNDELETED"];
         }
         $commMaster->users()->attach($attachUsers);
+
+        if($type == 2){
+            //email
+            if($ToUserIdsArray){
+                foreach($ToUserIdsArray as $userId){
+                    $whereArray = array('users.id' => $userId);
+                    $selectUserMasterDetail = UserMaster::selectUserMasterDetail($whereArray,null,null,null,null,null)->get()[0];
+
+                    $cronInsertArray[] = array(
+                        'recipient_user_id' => $userId,
+                        'orgId' => Auth::user()->orgId,
+                        'subject' => $template->subject,
+                        'message' => $template->body,
+                        'recipient' => $selectUserMasterDetail->email,
+                        // 'cc_recipient' => $cronCcEmails,
+                        'files_offset' => null,
+                        'file_attach' => null,
+                        'send_status' => 0,
+                        'sent_from' => env('MAIL_FROM_NAME'),
+                        'sent_from_email' => env('MAIL_FROM_ADDRESS'),
+                        'send_dts' => date("Y-m-d H:i:s"),
+                        'mail_error' => '',
+                        'createdBy'=>Auth::user()->id
+                        // 'subaccount_id' => $email_subaccount_id
+                    );
+                    
+                }
+                if($cronInsertArray){
+                    CronBatchEmail::insert($cronInsertArray);    
+                }
+            }
+            
+        }
     }
 
     /**

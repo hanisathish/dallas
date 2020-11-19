@@ -20,7 +20,11 @@ class GroupMember extends Model
     public static function membersList($groupId,$search){
         $result = self::select('group_members.id', 'users.id as user_id',
           DB::raw("(CASE group_members.isUser WHEN '1' THEN users.first_name ELSE group_members.first_name  END)  as first_name"),
-          'users.last_name','users.email','users.mobile_no')
+          DB::raw("(CASE group_members.isUser WHEN '1' THEN group_members.user_id ELSE '0'  END)  as grp_user_id"),
+          DB::raw("(CASE group_members.isUser WHEN '1' THEN users.email ELSE group_members.email  END)  as email"),
+          DB::raw("(CASE group_members.isUser WHEN '1' THEN users.last_name ELSE group_members.last_name  END)  as last_name"),
+          DB::raw("(CASE group_members.isUser WHEN '1' THEN users.mobile_no ELSE group_members.mobile_no  END)  as mobile_no"),
+          'group_members.isUser')
                         ->addSelect("member_since","group_members.role")
                   ->leftJoin("users","users.id","=","group_members.user_id")
         /* ->orderBy("created_at","desc") */;

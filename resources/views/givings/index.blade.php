@@ -7,7 +7,14 @@
             <div class="col-12">
                 <div class="card m-b-30">
                     <div class="card-body">
-                        <h5 class="mt-0">Giving List<a href="{{ URL:: asset('settings/givings/manage/')}}" class="btn btn-sm btn-success pull-right text-white"><i class="fa fa-plus"></i> Create New</a></h5>
+                        <h5 class="mt-0">Giving List
+                            @if($payment_gateways->count() > 0)
+                            <a href="{{ URL:: asset('settings/givings/manage/')}}" class="btn btn-sm btn-success pull-right text-white"><i class="fa fa-plus"></i> Create New</a>
+                            @else
+                                <span class="error" style="margin-left: 20%;">Kindly setup payment gateway to use "Giving" !</span> <a href="{{ URL:: asset('settings/payment_gateways/')}}" class="btn btn-sm btn-success pull-right text-white"><i class="fa fa-cog"></i> Click here to setup</a>
+                            @endif
+
+                        </h5>
                         <hr/>
                         <div class="tab-content">
                             <div class="tab-pane active p-3">

@@ -15,9 +15,10 @@ use App\Models\Events;
 use App\Models\MasterLookupData;
 use App\Models\SchedulingUser;
 use App\Models\CommTemplate;
+use App\Models\Team;
 use App\User;
 
-class SchedullingController extends Controller
+class ScheduleController extends Controller
 {
     public function __construct()
     {
@@ -77,6 +78,37 @@ class SchedullingController extends Controller
     public function createOrEditPage($schedule_id = null){
         $data['title'] = $this->browserTitle . " - Schedule List";
         $data['schedule_id'] =  $schedule_id;
+        $whereTeamArray=array('orgId'=>$this->orgId);
+        $data['team_id'] = Team::selectFromTeam($whereTeamArray)->get();
+
+        $whereUEArray=array('orgId'=>$this->orgId);
+        $eventsData = array();
+        $crudEvents = Events::crudEvents($whereUEArray,null,null,null,null,null,null,'1')->get();
+        //dd($crudEvents);
+        foreach ($crudEvents as $key=>$crudEventsvalue) {
+            if(strtotime($crudEventsvalue->eventCreatedDate) >= strtotime(date('Y-m-d')))
+            {
+                //dd($crudEventsvalue->eventCreatedDate);$key=>
+                $eventsData[] = $crudEventsvalue;
+            }
+            
+        }
+        //dd(count($eventsData));
+        $data['upcoming_events']=$eventsData;
+        //dd($data['team_id']->get()->toArray(),$whereTeamArray);
+        
+        if($schedule_id){
+            $whereSchArray = array('id'=>$schedule_id);
+            $crudSchedule = Schedule::crudSchedule($whereSchArray,null,null,null,null,null,null,'1')->get();
+            //$data['crudSchedule'] = $crudSchedule;
+            if($crudSchedule->count() > 0){
+                $data['crudSchedule'] = $crudSchedule[0];
+            }else{
+                return redirect('settings/scheduling');
+            }
+            
+        }
+        //dd($data['crudSchedule']->count());
         return view('settings.schedule.create', $data);
     }
 
@@ -86,28 +118,40 @@ class SchedullingController extends Controller
     }
 
     public function storeOrUpdateSchedule(Request $request){
-        $payload = json_decode(request()->getContent(), true);
+        $payload = $request->all();
+        //dd($payload);
+        //dd($arraySUUpdate,$request->all());
         $schedule = null;
         $isNewSchedule = true;
-        if(isset($payload['id'])){
-            $schedule = Schedule::where("id", $payload["id"])->first();
+        if(isset($payload['scheduleId'])){
+            $schedule = Schedule::where("id", $payload["scheduleId"])->first();
             $isNewSchedule = false;
         }else{
             $schedule = new Schedule();
             $schedule->orgId = $this->orgId;
-        }
-        if($payload["building_block"] == ""){ 
-            $payload["building_block"] = 99999999;
-        }
+        } 
+        //dd($schedule);
         // return $payload;
-        $fields = ['title', 'date', 'time', 'event_id', 'location_id', 'building_block', 'type_of_volunteer', 'checker_count', 'is_manual_schedule', 'notification_flag'];
+        $fields = ['title', 'event_id', 'is_manual_schedule', 'notification_flag', 'team_id', 'event_date'];
         foreach($fields as $field){
             $schedule[$field] = $payload[$field];
         }
-        $schedule->assign_ids = serialize($payload["assign_ids"]);
+        //dd($schedule);
+        //$schedule->assign_ids = serialize($payload["assign_ids"]);
         $schedule->save();
+        if($request->get('position_id_assign') != null || $request->get('position_id_assign') != ""){
+            foreach($request->get('position_id_assign') as $posids){
 
-        $this->generateCommunication($this->orgId, $this->authUserId, $payload["assign_ids"], $schedule, $isNewSchedule);
+                $arraySUUpdate = array("orgId"=>$this->orgId,"scheduling_id"=>$schedule->id,"team_id"=>$request->get('team_id'),"position_id"=>$posids,"user_id"=>$request->get('position_id_user_id_assign_'.$posids),"status"=>1);
+
+                SchedulingUser::updateOrCreate(array("orgId"=>$this->orgId,"scheduling_id"=>$schedule->id,"team_id"=>$request->get('team_id'),"position_id"=>$posids), $arraySUUpdate);
+                //echo $posids;,"user_id"=>$request->get('position_id_user_id_assign_'.$posids)
+            }    
+        }
+        
+
+        //$this->generateCommunication($this->orgId, $this->authUserId, $payload["assign_ids"], $schedule, $isNewSchedule);
+        return redirect('settings/scheduling/');
         return ["message"=> "Schedule has been successfully stored or updated"];
     }
 

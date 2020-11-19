@@ -25,7 +25,7 @@ class UserMaster extends Model  {
      * @var array
      */
     protected $fillable = [
-         'id', 'orgId', 'householdName', 'personal_id', 'name_prefix', 'given_name', 'first_name', 'last_name', 'middle_name', 'nick_name', 'email', 'username', 'email_verified_at', 'password', 'remember_token', 'referal_code', 'name_suffix', 'profile_pic', 'dob', 'doa', 'school_name', 'grade_id', 'life_stage', 'mobile_no', 'home_phone_no', 'gender', 'social_profile', 'marital_status', 'address', 'medical_note', 'congregration_status', 'created_at', 'updated_at', 'deletedBy', 'deleted_at'
+         'id', 'orgId', 'householdName', 'personal_id', 'name_prefix', 'given_name', 'first_name', 'last_name', 'middle_name', 'nick_name', 'full_name', 'user_full_name', 'email', 'username', 'email_verified_at', 'password', 'remember_token', 'referal_code', 'name_suffix', 'profile_pic', 'dob', 'doa', 'school_name', 'grade_id', 'life_stage', 'mobile_no', 'home_phone_no', 'gender', 'social_profile', 'marital_status', 'street_address', 'apt_address', 'city_address', 'state_address', 'zip_address', 'medical_note', 'congregration_status', 'created_at', 'updatedBy', 'updated_at', 'deletedBy', 'deleted_at'
         ];
 
     /**
@@ -182,7 +182,9 @@ class UserMaster extends Model  {
             DB::raw('(select mldValue from master_lookup_data where master_lookup_data.mldKey="name_suffix" and master_lookup_data.orgId=users.orgId and master_lookup_data.mldId=users.name_suffix)  AS name_suffix_format'),
             DB::raw('(select mldValue from master_lookup_data where master_lookup_data.mldKey="name_prefix" and master_lookup_data.orgId=users.orgId and master_lookup_data.mldId=users.name_prefix)  AS name_prefix_format'),
             DB::raw('TIMESTAMPDIFF(YEAR, dob, CURDATE()) AS age'),'life_stage','mobile_no',
-            'gender','marital_status','address','medical_note','social_profile','full_name');
+            'gender','marital_status','street_address','apt_address','city_address',
+            'state_address','zip_address',
+            'medical_note','social_profile','full_name');
 
         $query->leftJoin('model_has_roles', function($join) {
             $join->on("model_has_roles.model_id", "=", "users.id");

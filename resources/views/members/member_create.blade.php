@@ -148,9 +148,9 @@
     </div>
 
     <div class="col-sm-3 col-lg-3 col-md-3 divcols" >
-        <label>Birthdate</label>
+        <label>Birthdate (mm/dd/yyyy)</label>
         <div class="input-group">
-            <input type="text" class="form-control datepicker-autoclose" name="dob" id="dob" placeholder="mm/dd/yyyy" value="{{ old('dob', isset($user) ? $user->dob : '') }}">
+            <input type="text" class="form-control datepicker-autoclose" name="dob" id="dob" placeholder="mm/dd/yyyy" value="{{ old('dob', isset($user) ? date('m/d/Y',strtotime($user->dob)) : '') }}">
             <div class="input-group-append bg-custom b-0"><span class="input-group-text"><i class="mdi mdi-calendar"></i></span></div>
         </div><!-- input-group -->
     </div>
@@ -166,9 +166,9 @@
     </div>
 
     <div class="col-sm-3 col-lg-3 col-md-3 divcols" >
-        <label>Anniversary</label>
+        <label>Anniversary (mm/dd/yyyy)</label>
         <div class="input-group">
-            <input type="text" class="form-control datepicker-autoclose" name="doa" id="doa" placeholder="mm/dd/yyyy" value="{{ old('doa', isset($user) ? $user->doa : '') }}">
+            <input type="text" class="form-control datepicker-autoclose" name="doa" id="doa" placeholder="mm/dd/yyyy" value="{{ old('doa', isset($user) ? date('m/d/Y',strtotime($user->doa)) : '') }}">
             <div class="input-group-append bg-custom b-0"><span class="input-group-text"><i class="mdi mdi-calendar"></i></span></div>
         </div><!-- input-group -->
     </div> 
@@ -212,7 +212,15 @@
         </select>
         
     </div>
-    
+    <div class="col-sm-3 col-lg-3 col-md-3 divcols" >
+        <label>Username for Login</label>
+      <input type="text" class="form-control" name="username" id="username" placeholder="Username for Login" value="{{ old('username', isset($user) ? $user->username : '') }}" required="">
+    </div>
+
+    <div class="col-sm-3 col-lg-3 col-md-3 divcols" >
+        <label>Password</label>
+      <input type="text" class="form-control" name="password" id="password" placeholder="Password" value="">
+    </div>
     <div class="col-sm-12 col-lg-12 col-md-12 divcols" >
         <div class="form-group">
             <div>

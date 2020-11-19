@@ -166,7 +166,7 @@ class BulkUploadController extends Controller
 
                 }else if($request->input('bulk_upload_type') == 'member_bulk'){
                     $rolesAdminData = DB::table('roles')->where('orgId',$this->userguard->orgId)->where('role_tag','member')->get();
-                    if($countheader == 4  && in_array('email',$headerRow) && in_array('first_name',$headerRow) && in_array('last_name',$headerRow) && in_array('mobile',$headerRow)){
+                    if($countheader == 18  && in_array('email',$headerRow) && in_array('first_name',$headerRow) && in_array('last_name',$headerRow) && in_array('mobile_no',$headerRow)){
                         foreach ($data as $key => $value) {
                             if($value->email && $value->first_name){
                                 $randomString = strtolower(str_random(4));
@@ -181,13 +181,24 @@ class BulkUploadController extends Controller
                                     'first_name' => $value->first_name, 
                                     'last_name' => $value->last_name,
                                     'full_name' => $value->first_name." ".$value->last_name, 
-                                    'mobile_no' => $value->mobile, 
+                                    'mobile_no' => $value->mobile_no, 
                                     'orgId' => $this->userguard->orgId, 
                                     'householdName' => $value->first_name."'s household", 
                                     'personal_id' => $newPersonal_id, 
                                     'referal_code' => $referal_code, 
                                     'password' => bcrypt('123456'),
-                                    'username' => $username
+                                    'username' => $username,
+                                    'middle_name' => $value->middle_name, 
+                                    'nick_name' => $value->nick_name,
+                                    'street_address' => $value->street_address,
+                                    'apt_address' => $value->apt_address,
+                                    'city_address' => $value->city_address,
+                                    'state_address' => $value->state_address,
+                                    'zip_address' => $value->zip_address,
+                                    'gender' => $value->gender,
+                                    'birthdate' => $value->birthdate,
+                                    'social_profile' => $value->social_profile,
+                                    'user_type' => $value->user_type, 
                                     ];
                                  $insertIdUser = User::create($insert);
 

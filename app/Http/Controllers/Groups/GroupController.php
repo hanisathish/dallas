@@ -19,6 +19,11 @@ use App\Models\Insights;
 use DB;
 use DataTables;
 use Auth;
+use App\Helpers\CommunicationHelper;
+use App\Models\CronBatchEmail;
+use App\Models\CommTemplate;
+use App\Models\UserMaster;
+
 class GroupController extends Controller
 {
     public function __construct()
@@ -50,7 +55,15 @@ class GroupController extends Controller
         $count = $count[0]->record_count;
 
         $items = array();
+        
         foreach($groupList as $item) {
+            $group_image = url('/assets/uploads/groupdefault.png');
+            if($item->image_path != null) {
+                $group_image_json = json_decode(unserialize($item->image_path));
+                $group_image = $group_image_json->download_path . $group_image_json->uploaded_file_name;
+            }
+            
+
             //echo $item->last_meeting; exit();
             $html=' <div class="card m-b-5 border border-primary group p-0">
             <a href="'.url("groups/details/".$item->id).'" class="wrapper-link">
@@ -60,7 +73,7 @@ class GroupController extends Controller
                             <div class="row no-gutters">
 
 
-                                    <div class=" col-md-12 group-header" style=\'height: 116px;background-image: url("https://groups-production.s3.amazonaws.com/uploads/group/header_image/defaults/medium_6.png");\'>
+                                    <div class=" col-md-12 group-header" style=\'height: 116px;background-image:url('.$group_image.');\'>
 
                                       <div class="grouptype-name " ><h6 class="text-center">'.ucwords($item->name).'</h6></div>
 
@@ -123,12 +136,12 @@ class GroupController extends Controller
             $data['attendance'] =GroupEvent::getMeetingDates($id,$formDate,$toDate);
            // print_r($data['overview'] ); exit();
         }
-
+        $group_image = url('/assets/uploads/groupdefault.png');
         $data['activeTab'] =$activeTab;
         $data['groupId'] =$id;
         $data['title'] = $this->browserTitle . " - Group Details";
         $data['locations'] = Location::listLocations("")->get();
-        $groupDetails->img = "https://groups-production.s3.amazonaws.com/uploads/group/header_image/defaults/medium_6.png";
+        $groupDetails->img = $group_image;
 
         if($groupDetails->image_path!=""){
             $r = json_decode(unserialize($groupDetails->image_path));
@@ -155,7 +168,7 @@ class GroupController extends Controller
 
                               <a class="dropdown-item" href="javascript:removeMember('.$row->id.')">Remove from group</a>
                               <a class="dropdown-item" href="javascript:editMembershipDate('.$row->id.')">Edit Membership date</a>
-                              <a class="dropdown-item" href="javascript:makeLeader('.$row->id.')">Make leader</a>
+                              <a class="dropdown-item" href="javascript:makeLeader('.$row->id.','.$row->grp_user_id.')">Make leader</a>
                             </div>
                           </div>';
 
@@ -231,9 +244,13 @@ class GroupController extends Controller
     public function memberAction(Request $request){
         $action = $request->action;
         $memberId = $request->memberId;
+        $notify_member_role = $request->notify_member_role;
+        // dd($notify_member_role);
+        $grp_user_id = $request->grp_user_id;
         if($action =="remove") {
             $model = GroupMember::find( $memberId );
             $model->delete();
+            $tag="notify_member_remove_from_group";
         }
         if($action =="update_date") {
             GroupMember::where("id", $memberId)
@@ -243,6 +260,7 @@ class GroupController extends Controller
                                 "updatedBy"=> Auth::id()
                             ]
                         );
+            
         }
         if($action =="make_leader") {
             GroupMember::where("id", $memberId)
@@ -252,10 +270,63 @@ class GroupController extends Controller
                                 "updatedBy"=> Auth::id()
                             ]
                         );
+            $tag="notify_member_make_leader";
+        }
+
+        //send notification and email on checkbox checked notify_member_role
+        if($notify_member_role){
+            if($grp_user_id != 0){
+
+                CommunicationHelper::generateCommunications($tag, Auth::user()->orgId, '2', Auth::user()->id, array($grp_user_id), null, null);
+
+                 
+            }else{
+                       
+                $template = CommTemplate::where('tag', $tag)->where('org_id', Auth::user()->orgId)->first();
+                if(empty($template)){
+                    $template = (new static)->addCommTemplateToOrg($tag, Auth::user()->orgId);
+                }       
+                $getGroupMember = GroupMember::find( $memberId );
+                    // dd($getGroupMember);
+                    $cronInsertArray = array(
+                        'recipient_user_id' => null,
+                        'orgId' => Auth::user()->orgId,
+                        'subject' => $template->subject,
+                        'message' => $template->body,
+                        'recipient' => $getGroupMember->email,
+                        // 'cc_recipient' => $cronCcEmails,
+                        'files_offset' => null,
+                        'file_attach' => null,
+                        'send_status' => 0,
+                        'sent_from' => env('MAIL_FROM_NAME'),
+                        'sent_from_email' => env('MAIL_FROM_ADDRESS'),
+                        'send_dts' => date("Y-m-d H:i:s"),
+                        'mail_error' => '',
+                        'createdBy'=>Auth::user()->id
+                        // 'subaccount_id' => $email_subaccount_id
+                    );
+                    
+                
+                    CronBatchEmail::insert($cronInsertArray); 
+            }
+            
         }
     }
 
-
+    /**
+     * Creating a New communication template, If Template not created for respective org
+     */
+    public static function addCommTemplateToOrg($tag, $orgId){
+        $template = CommTemplate::where('tag', $tag)->where('org_id', 0)->first();
+        $newTemplate = CommTemplate::create([
+                            'tag' => $template->tag,
+                            'name' => $template->name,
+                            'subject' => $template->subject,
+                            'body' => $template->body,
+                            'org_id' => $orgId
+                        ]);
+        return $newTemplate;
+    }
     /*** events */
 
     public function addEvents(Request $request){

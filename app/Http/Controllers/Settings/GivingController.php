@@ -48,6 +48,11 @@ class GivingController extends Controller
 
     public function givingIndex(){
         $data['title'] = $this->browserTitle . " - Givings List";
+
+        $payment_gateways = PaymentGateways::select('*')->where(array('orgId'=>$this->orgId, 'active'=>1))->get();
+        
+        $data['payment_gateways'] = $payment_gateways;
+        
         return view('givings.index', $data);
     }
 

@@ -5,7 +5,7 @@
     @include('settings.schedule.header')
 
     <?php
-        $formUrl = "/settings/schedulling/store";
+        $formUrl = "/settings/scheduling/store";
         $schedule_id = isset(request()->route()->parameters['schedule_id'])? request()->route()->parameters['schedule_id'] : null;
         if($schedule_id){
             //$formUrl = $formUrl ."/". $schedule_id;
@@ -21,7 +21,7 @@
                 <div class="row p0 m-0">
                     {!! Form::open(array('id'=>'scheduleForm','name'=>'scheduleForm','method' => 'post', 'url' => $formUrl, 'class' => 'col-sm-12 card p-2','files' => true)) !!}
                     
-                    <!-- <form method="post" action="{{ route('settings.schedulling.store') }}" name="scheduleForm" id="scheduleForm" enctype="multipart/form-data" class="col-sm-12 card p-2"> -->
+                    <!-- <form method="post" action="{{ route('settings.scheduling.store') }}" name="scheduleForm" id="scheduleForm" enctype="multipart/form-data" class="col-sm-12 card p-2"> -->
                         <input type="text" id="scheduleId" name="scheduleId" value="{{$schedule_id}}" class="d-none">
                         
                         <div class="row">
@@ -48,7 +48,11 @@
 
                                                 <input class="form-control" type="hidden" value="{{ old('event_id_hidden', isset($crudSchedule) ? $crudSchedule->event_id : '') }}" name="event_id_hidden" id="event_id_hidden">
                                             </div>
- 
+                                            <span>
+                                                @if(count($upcoming_events) == 0)
+                                                    No events avialable.<a href="{{ URL::asset('events')}}" >Click here to </a>create events and then schedule here.
+                                                @endif
+                                            </span>
 
                                         </div>
                                         <div class="form-group row">
@@ -81,10 +85,12 @@
                                             <div class="col-sm-10">
                                                 <select class="form-control" name="team_id" id="team_id">
                                                     <option value="">--Select-</option>
-                                                    @foreach($team_id as $value)
-                                                    
-                                                    <option <?= isset($crudSchedule)?($crudSchedule->team_id==$value->id)?'selected':'':'' ?> value="{{$value->id}}">{{$value->name}}</option>
-                                                    @endforeach
+                                                    @if($team_id->count() > 0)
+                                                        @foreach($team_id as $value)
+                                                        
+                                                        <option <?= isset($crudSchedule)?($crudSchedule->team_id==$value->id)?'selected':'':'' ?> value="{{$value->id}}">{{$value->name}}</option>
+                                                        @endforeach
+                                                    @endif
                                                 </select>
                                             </div>
                                         </div>
@@ -135,8 +141,8 @@
         </div>
     </div>
     
-</div>
-
+</div> 
+<?php //dd(count($upcoming_events)); ?>
     <script type='text/javascript'>
  /////////
 
@@ -170,22 +176,22 @@ $(document).ready(function(){
         var user_busy_days      = <?php echo json_encode(array_unique((array_column($upcoming_events, 'eventCreatedDate'))));?>;//['2019-11-09','2019-11-16','2019-11-19'];
 
 
-
+        
         $('.selecteventdate').datepicker({
             autoclose: true,
             format: 'yyyy-mm-dd',
             inline: true,
             sideBySide: true,
             beforeShowDay: function (date) {
-
-                calender_date = date.getFullYear()+'-'+('0'+date.getMonth()+1).slice(-2)+'-'+('0'+date.getDate()).slice(-2);
+                var month = date.getMonth()+1;
+                calender_date = date.getFullYear()+'-'+('0'+month).slice(-2)+'-'+('0'+date.getDate()).slice(-2);
 
                 var search_index = $.inArray(calender_date, user_busy_days);
-                //console.log(calender_date,"===",user_busy_days);
-                if (search_index > -1) {
-                    return {classes: 'non-highlighted-cal-dates', tooltip: 'User available on this day.'};
+                // console.log(calender_date,"===",user_busy_days,"search_index===",search_index);
+                if (search_index != -1) {
+                    return {classes: 'non-highlighted-cal-dates', tooltip: 'Event available on this day.'};
                 }else{
-                    return {classes: 'highlighted-cal-dates', tooltip: 'User not available on this day.'};
+                    return {classes: 'highlighted-cal-dates', tooltip: 'Event not available on this day.'};
                 }
 
             }

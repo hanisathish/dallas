@@ -43,16 +43,17 @@ class MemberController extends Controller
         if($personal_id){
             $user = User::where('orgId', $orgId)->where("personal_id", $personal_id)->first();
             if($user){
-                $fullAdr = explode("///",$user['address']);
-                $user['street_address'] = $fullAdr[0];
-                $user['apt_address'] = isset($fullAdr[1])? $fullAdr[1]:'';
-                $user['city_address'] = isset($fullAdr[2])? $fullAdr[2]:'';
-                $user['state_address'] = isset($fullAdr[3])? $fullAdr[3]:'';
-                $user['zip_address'] = isset($fullAdr[4])? $fullAdr[4]:'';
+                // $fullAdr = explode("///",$user['address']);
+                // $user['street_address'] = $fullAdr[0];
+                // $user['apt_address'] = isset($fullAdr[1])? $fullAdr[1]:'';
+                // $user['city_address'] = isset($fullAdr[2])? $fullAdr[2]:'';
+                // $user['state_address'] = isset($fullAdr[3])? $fullAdr[3]:'';
+                // $user['zip_address'] = isset($fullAdr[4])? $fullAdr[4]:'';
                 $data['user'] = $user;
             } else {
                 return redirect('people/member/management');
             }
+            // dd($data['user']);
             $data['title'] = $this->browserTitle . " - Member Edit";
         } else {
             $data['title'] = $this->browserTitle . " - Member Create";
@@ -72,7 +73,7 @@ class MemberController extends Controller
     * Created By: Lokesh
     */
     public function storeOrUpdate(Request $request, $personal_id=null){
-        
+        // dd("asd");
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',//|Regex:/^([a-zA-Z0-9]+[a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,})$/
             ]);
@@ -86,15 +87,15 @@ class MemberController extends Controller
                 $user['referal_code'] = substr($request->first_name, 0, 4) .strtolower(str_random(4));
                 $count = User::count();
                 $user['personal_id'] = str_pad($count + 1, 10, "0", STR_PAD_LEFT);
-                $user['password'] = "password";
+                
                 $request[''] = 2;
                 $user['householdName'] = $request->first_name."'s household";
             }
-            $user['address'] = $request->street_address."///".$request->apt_address."///".$request->city_address."///".$request->state_address."///".$request->zip_address;
+            // $user['address'] = $request->street_address."///".$request->apt_address."///".$request->city_address."///".$request->state_address."///".$request->zip_address;
             
             $keys= ['name_prefix', 'first_name','middle_name', 'last_name', 'name_suffix', 'given_name', 'nick_name',
                      'email', 'mobile_no', 'life_stage', 'gender', 'dob', 'marital_status', 'doa', 'school_name', 
-                     'grade_id', 'medical_note', 'social_profile'
+                     'grade_id', 'medical_note', 'social_profile','street_address', 'apt_address', 'city_address', 'state_address', 'zip_address'
                 ];
             foreach($keys as $key){
                 $user[$key] = $request[$key];
@@ -109,6 +110,11 @@ class MemberController extends Controller
                 $user['doa'] = (isset($request->doa) ? date('Y-m-d',strtotime($request->doa)) : null);    
             }
             
+            if($request->password){
+                $user['password'] = $request->password;
+            }else{
+                
+            }
             $user->save();
 
             $rolesAdminData = DB::table('roles')->where('orgId',$this->userSessionData['umOrgId'])->where('role_tag','member')->get();
@@ -131,7 +137,7 @@ class MemberController extends Controller
                 Session::flash('message', 'Member profile has been updated successfully');
             } else {
                 $userIds = [$user->id];
-                $this->generateCommunication('welcome', 1, $userIds);
+                $this->generateCommunication('welcome', 2, $userIds);
                 Session::flash('message', 'Member profile has been created successfully');
             }
            
@@ -152,12 +158,12 @@ class MemberController extends Controller
             DB::raw('DATE_FORMAT(users.doa, "%d-%m-%Y") AS doa_format'))->where('orgId', $orgId)->where("personal_id", $personal_id)->first();
         $whereArray = array("personal_id"=> $personal_id);
         //$user = UserMaster::selectUserMasterDetail($whereArray,null,null,null,null,null)->get()[0];
-        $fullAdr = explode("///",$user['address']);
-        $user['address'] = $fullAdr[0];
-        $user['address'] .= isSet($fullAdr[1]) && strlen($fullAdr[1]) >0? ','. $fullAdr[1]:'';
-        $user['address'] .= isSet($fullAdr[2]) && strlen($fullAdr[2]) >0? ','. $fullAdr[2]:'';
-        $user['address'] .= isSet($fullAdr[3]) && strlen($fullAdr[3]) >0? ','. $fullAdr[3]:'';
-        $user['address'] .= isSet($fullAdr[4]) && strlen($fullAdr[4]) >0? '-'. $fullAdr[4]:'';
+        // $fullAdr = explode("///",$user['address']);
+        // $user['address'] = $fullAdr[0];
+        // $user['address'] .= isSet($fullAdr[1]) && strlen($fullAdr[1]) >0? ','. $fullAdr[1]:'';
+        // $user['address'] .= isSet($fullAdr[2]) && strlen($fullAdr[2]) >0? ','. $fullAdr[2]:'';
+        // $user['address'] .= isSet($fullAdr[3]) && strlen($fullAdr[3]) >0? ','. $fullAdr[3]:'';
+        // $user['address'] .= isSet($fullAdr[4]) && strlen($fullAdr[4]) >0? '-'. $fullAdr[4]:'';
         // Getting Master loook data
         $keys = ["school_name", "name_prefix", "name_suffix", "marital_status"];
         $lookUpKeys = [];
@@ -200,7 +206,7 @@ class MemberController extends Controller
             $j = 0;
             foreach($hh->users as $huser){
                 $user = $this->extreactHhUrserFields($huser);
-                $user['address'] = $this->extractAddress($huser);
+                $user['address'] = $huser['street_address'];//$this->extractAddress($huser);
                 $households[$i]['users'][] = $user;
             }
              $i++;
@@ -223,7 +229,7 @@ class MemberController extends Controller
                     ->orWhere('full_name', 'LIKE', "%" . $payload['searchStr'] . "%")
                     ->orWhere("email", $payload['searchStr'])
                     ->orWhere("mobile_no",$payload['searchStr'])
-                    ->select('id', "first_name", "last_name", "middle_name", "full_name","mobile_no", 'email', 'personal_id', 'profile_pic', 'address')
+                    ->select('id', "first_name", "last_name", "middle_name", "full_name","mobile_no", 'email', 'personal_id', 'profile_pic', 'street_address')
                     ->get();
                     // dd($users);
         foreach($users as $user){
@@ -392,12 +398,12 @@ class MemberController extends Controller
             DB::raw('DATE_FORMAT(users.doa, "%d-%m-%Y") AS doa_format'))->where('orgId', $orgId)->where("personal_id", $personal_id)->first();
         $whereArray = array("personal_id"=> $personal_id);
         //$user = UserMaster::selectUserMasterDetail($whereArray,null,null,null,null,null)->get()[0];
-        $fullAdr = explode("///",$user['address']);
-        $user['address'] = $fullAdr[0];
-        $user['address'] .= isSet($fullAdr[1]) && strlen($fullAdr[1]) >0? ','. $fullAdr[1]:'';
-        $user['address'] .= isSet($fullAdr[2]) && strlen($fullAdr[2]) >0? ','. $fullAdr[2]:'';
-        $user['address'] .= isSet($fullAdr[3]) && strlen($fullAdr[3]) >0? ','. $fullAdr[3]:'';
-        $user['address'] .= isSet($fullAdr[4]) && strlen($fullAdr[4]) >0? '-'. $fullAdr[4]:'';
+        // $fullAdr = explode("///",$user['address']);
+        // $user['address'] = $fullAdr[0];
+        // $user['address'] .= isSet($fullAdr[1]) && strlen($fullAdr[1]) >0? ','. $fullAdr[1]:'';
+        // $user['address'] .= isSet($fullAdr[2]) && strlen($fullAdr[2]) >0? ','. $fullAdr[2]:'';
+        // $user['address'] .= isSet($fullAdr[3]) && strlen($fullAdr[3]) >0? ','. $fullAdr[3]:'';
+        // $user['address'] .= isSet($fullAdr[4]) && strlen($fullAdr[4]) >0? '-'. $fullAdr[4]:'';
         // Getting Master loook data
         $keys = ["school_name", "name_prefix", "name_suffix", "marital_status"];
         $lookUpKeys = [];

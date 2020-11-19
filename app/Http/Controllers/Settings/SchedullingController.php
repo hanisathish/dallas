@@ -46,8 +46,8 @@ class SchedullingController extends Controller
         foreach ($schedules as $schedule) {
             $row = [$i, $schedule->title,  $schedule->event->eventName];
             //\Carbon\Carbon::parse($schedule->time)->format('h:i'), \Carbon\Carbon::parse($schedule->date)->format('d-m-Y')
-            $viewLink = "";//<a href='".url("/settings/schedulling/". $schedule->id) ."'><i class='fa fa-eye'></i></a>
-            $editLink = url("/settings/schedulling/manage/". $schedule->id);
+            $viewLink = "";//<a href='".url("/settings/scheduling/". $schedule->id) ."'><i class='fa fa-eye'></i></a>
+            $editLink = url("/settings/scheduling/manage/". $schedule->id);
             $row[] = "<a href='".$editLink ."'>  <i class='fa fa-pencil-square-o'></i></a>";
             $result[] = $row;
             $i += 1;
@@ -104,7 +104,7 @@ class SchedullingController extends Controller
             if($crudSchedule->count() > 0){
                 $data['crudSchedule'] = $crudSchedule[0];
             }else{
-                return redirect('settings/schedulling');
+                return redirect('settings/scheduling');
             }
             
         }
@@ -151,7 +151,7 @@ class SchedullingController extends Controller
         
 
         //$this->generateCommunication($this->orgId, $this->authUserId, $payload["assign_ids"], $schedule, $isNewSchedule);
-        return redirect('settings/schedulling/');
+        return redirect('settings/scheduling/');
         return ["message"=> "Schedule has been successfully stored or updated"];
     }
 

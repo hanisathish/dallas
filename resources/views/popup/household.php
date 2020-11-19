@@ -361,7 +361,7 @@
             item.users.forEach(function(usr){
                 let image = null;
                 if(usr.profile_pic){
-                    image = `<img src="${usr.profile_pic}" height="42" width="42" style="margin:10px;" title="${usrName}" class="rounded-circle">`;
+                    image = `<img src="${usr.profile_pic}" height="42" width="42" style="margin:10px;" title="${usr.usrName}" class="rounded-circle">`;
                 } else {
                     image = `<span title="${usr.full_name}" style="font-size:42px; margin:10px;"><i class="fa fa-user"></i></span>`
                 }

@@ -29,6 +29,7 @@ use Camroncade\Timezone\Facades\Timezone;
 use App\Models\UserMaster;
 use App\Models\CommTemplate;
 use App\Helpers\CommunicationHelper;
+use App\Models\CronBatchEmail;
 
 class PassportController extends Controller {
 
@@ -221,7 +222,6 @@ class PassportController extends Controller {
 		
         $data['title'] = $this->browserTitle . " - Change Customer Password";
 		
-		$data['crudOrganizationData'] = $this->crudOrganizationData;
 		
 		$data['getUserListsCount'] = 0;
         $data['getUserLists'] = '';
@@ -235,6 +235,9 @@ class PassportController extends Controller {
 			
 			$data['getUserListsCount'] = $getUserLists->count();
             $data['getUserLists'] = $getUserLists[0];
+
+            $data['crudOrganizationData'] = Organization::crudOrganization(array('organization.orgId'=>$getUserLists[0]->orgId),null,null,null,null,null,null,'1')->get();
+            // dd($data['crudOrganizationData']);
 			
 		}			
    		
@@ -272,14 +275,15 @@ class PassportController extends Controller {
             }
 			
             DB::commit();
+            return response()->json(['result_code' => 1,'message' => 'Password has been changed successfull. Login with your new password'], 200);
             // all good
         } catch (\Exception $e) {
             DB::rollback();
             // something went wrong
-            dd("error",$e);
+            return response()->json(['result_code' => 0,'message' => $e->getMessage()], 200);
             //return redirect('/banker_dashboard#tab_3/error');
         }
-        return redirect('/');
+        // return redirect('/');
     }
 	
 	
@@ -475,6 +479,15 @@ class PassportController extends Controller {
                 
                 DB::table('comm_templates')->insertUsing(['org_id','tag', 'name','subject','body'], $selectTemplaes);
                 //////
+
+
+                ////send welcome email
+
+                $userIds = [$insertUser->id];
+                if(count($userIds) > 0){
+                    CommunicationHelper::generateCommunications('welcome', $insertOrganization->orgId, 2, $insertUser->id, $userIds);
+                }
+                //end of welcome email
                 
                 
             }else{
@@ -673,7 +686,7 @@ class PassportController extends Controller {
             //generate welcome email communication
             $userIds = [$insertUser->id];
             if(count($userIds) > 0){
-                CommunicationHelper::generateCommunications('welcome', $request->orgId, 1, $insertUser->id, $userIds);
+                CommunicationHelper::generateCommunications('welcome', $request->orgId, 2, $insertUser->id, $userIds);
             }
 
             
@@ -701,7 +714,143 @@ class PassportController extends Controller {
    
    
     
-   
+   /**
+     * @Function name : forgotpwd
+     * @Purpose : forgotpwd
+     * @Added by : Sathish    
+     * @Added Date : Nov 07, 2020
+     */
+    public function forgotpwd(Request $request) {
+        //SELECT  users.* FROM `users`
+            //group by orgId,email
+            //having count(*) > 1
+        
+        DB::beginTransaction();
+
+        try {            
+                
+                $templates = CommTemplate::where('tag', 'forgot_password')->where('org_id', 0)->select("id", "tag", "name", "subject","body")->get();
+                         
+                // 
+                $template_subject = $templates[0]->subject;
+                $template_body = $templates[0]->body;
+                // dd($template_subject);
+
+                $user = UserMaster::select('users.id','users.email','users.first_name','organization.orgId','organization.orgName','organization.orgDomain','model_has_roles.role_id','roles.name as rolename')->leftjoin("organization","organization.orgId","=","users.orgId")->leftjoin("model_has_roles","model_has_roles.model_id","=","users.id")->leftJoin('roles', function($join) {
+            $join->on("roles.orgId", "=", "users.orgId");
+            $join->on("model_has_roles.role_id", "=", "roles.id");
+        })->where('email', $request->get('forgot_email'));
+
+                // dd($user->get());
+                $pwd_url = $url_message = '<table>';
+                $url_message.= '<tr>';
+                $url_message.= '<th>Organization</th>';
+                $url_message.= '<th>User Role</th>';
+                $url_message.= '<th>Forgot password URL</th>';
+                $url_message.= '</tr>';
+                // dd($user->roles);
+                if($user->count() > 0) {
+                    // dd($user,$user->count());    
+                    foreach ($user->get() as $uservalue) {
+                        
+                        
+                        $id = $uservalue->id;
+                         // dd(); 
+                        // Get Templates
+                        
+                        // Send Mail
+                        
+                        $subject = $template_subject;
+                        $to_email= $request->get('forgot_email');
+                        $from_email='dummyproj007@gmail.com';
+                        
+                        $pwd_url = url("/") . "/changecustomerpassword/".$uservalue->id;
+                        // dd($pwd_url);
+                        $message ="<h3>Password Recovery</h3>"."<br/>";
+                        $message.= "Hello,<br>";        
+                        $message.= "<h4>".$template_body."</h4><br />";
+                        // $url_message.= '';
+                        
+
+                        $url_message.= '<tr>';
+                        $url_message.= '<td>';
+                        $url_message.= $uservalue->orgName;
+                        $url_message.= '</td>';
+                        $url_message.= '<td>';
+                        $url_message.= $uservalue->rolename;
+                        
+                        $url_message.= '</td>';
+                        $url_message.= '<td>';
+                        $url_message.= '<a href="' . $pwd_url . '" class="btn bg-blue btn-block">Reset Password</a>';
+                        $url_message.= '</td>';
+                        $url_message.= '</tr>';
+                        
+                        // $url_message.= '</table>';
+
+                        $message .= $url_message.'</table>';
+                        $message.= 'Thanks!<br />'; 
+             
+                        
+                        // $usersconcat = $uservalue->id;
+                        //          
+                
+                     
+                        // $send_mail = Mail::send(array(), array(), function ($email) use ($subject, $to_email, $from_email, $message) {
+                        // $email->to($to_email)
+                        //        ->from($from_email)
+                        //        ->subject($subject)
+                        //        ->setBody(nl2br($message), 'text/html');
+                        // });
+
+                        // dd($cronInsertArray);
+                    }
+                    if($message){
+                        // dd('asda');
+                        $cronInsertArray = array(
+                            'recipient_user_id' => null,
+                            'orgId' => 0,//Auth::user()->orgId,
+                            'subject' => $subject,
+                            'message' => $message,
+                            'recipient' => $request->get('forgot_email'),
+                            // 'cc_recipient' => $cronCcEmails,
+                            'files_offset' => null,
+                            'file_attach' => null,
+                            'send_status' => 0,
+                            'sent_from' => env('MAIL_FROM_NAME'),
+                            'sent_from_email' => env('MAIL_FROM_ADDRESS'),
+                            'send_dts' => date("Y-m-d H:i:s"),
+                            'mail_error' => '',
+                            // 'createdBy'=>Auth::user()->id
+                            // 'subaccount_id' => $email_subaccount_id
+                        );      
+                        // dd($cronInsertArray);
+                        CronBatchEmail::create($cronInsertArray);
+                        
+                    }
+                    
+                }
+                else 
+                { 
+                    return response()->json(['result_code' => 0,'message' => 'Email does not exists'], 200);                        
+                }
+            
+            DB::commit(); 
+            return response()->json(['result_code' => 0,'message' => 'An email is sent to above entered email address.'], 200);
+            
+            
+        }
+        catch (\Illuminate\Database\QueryException $e) {
+            DB::rollback();    
+            return response()->json(['result_code' => 0,'message' => $e->getMessage()], 200);
+            
+            
+           // something went wrong with the transaction, rollback
+        }  catch (\Exception $e) {
+            DB::rollback();            
+            return response()->json(['result_code' => 0,'message' => $e->getMessage()], 200);
+        }
+  
+    }
    
    
    

@@ -20,7 +20,7 @@
 
                             </div><!-- end col -->
                             <?php $domainData = \App\Models\Organization::find(Session::get('userSessionData')['umOrgId']); 
-                            $orgUrl = $domainData['orgDomain'].'/groups/';
+                            $orgUrl = $domainData['orgDomain'].'/groups/list/'.$groupDetails->groupType_id;
                             ?>
 
                             <div class="col-md-2 col-lg-2 col-xl-2">

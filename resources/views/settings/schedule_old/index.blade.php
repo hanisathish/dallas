@@ -7,7 +7,7 @@
             <div class="col-12">
                 <div class="card m-b-30">
                     <div class="card-body">
-                        <h5 class="mt-0">Scheduling List<a href="{{ URL:: asset('/settings/schedulling/manage')}}" class="btn btn-sm btn-success pull-right text-white"><i class="fa fa-plus"></i> Create New</a></h5>
+                        <h5 class="mt-0">Scheduling List<a href="{{ URL:: asset('/settings/scheduling/manage')}}" class="btn btn-sm btn-success pull-right text-white"><i class="fa fa-plus"></i> Create New</a></h5>
                         <hr/>
                         <div class="tab-content">
                             <div class="tab-pane active p-3">

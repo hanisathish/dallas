@@ -284,3 +284,74 @@ $.validator.addMethod("uniqueUsername", function(ahSiteId, element) {
     });
     return (mydata1 != "found");
 }, 'This Username is already exist. Choose any other username please.');
+
+
+$(".forgotpwddiv").hide();
+$("#forgotPassword").click(function () {
+    $(".forgotpwddiv").show();
+});
+
+
+
+$(document).ready(function () {
+
+
+    chkForgotPwdValidateStatus = "";
+    chkForgotPwdValidateStatus = $("#siteForgotPwdForm").validate({
+        //ignore:[],// false,
+        ignore: false,
+        errorClass: "error",
+        rules: {
+            forgot_email: {
+                required: true,
+                email:true
+            } 
+        },
+        messages: {
+            forgot_email: {
+                required: "Please enter email",
+                email: "Please enter valid email"
+            } 
+        }
+    });
+
+});
+
+$("#btnForgotPwd").click(function () {
+
+    var formObj = $('#siteForgotPwdForm');
+    var formData = new FormData(formObj[0]);
+
+    $("#siteForgotPwdForm").valid();
+
+    var errorNumbers = chkForgotPwdValidateStatus.numberOfInvalids();
+    $("#forgotpwdspan").html('');
+
+    if (errorNumbers == 0) {
+        $.ajax({
+            url: siteUrl + '/forgotpwd',
+            async: true,
+            type: "POST",
+            data: formData,
+            dataType: "json",
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function (data)
+            {
+                if(data.result_code == 1){
+                    $("#forgotpwdspan").html(data.message);
+                }else{
+                    //alert(data.failure);
+                    $("#forgotpwdspan").html(data.message);
+                    return false;
+                }
+                 
+            }
+
+        });
+
+    } else {
+
+    }
+});

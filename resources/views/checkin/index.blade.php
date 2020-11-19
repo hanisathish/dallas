@@ -18,7 +18,7 @@
             <!-- end page title end breadcrumb -->
 
             <div class="row">
-                    <div class="col-lg-3">
+                    <div class="col-lg-3" style="display: none">
                         <div class="card m-b-30">
                             <div class="card-body">
                                 <div class="button-items">
@@ -30,7 +30,7 @@
                             </div>
                         </div>
                     </div>
-            <div class="col-lg-9">
+            <div class="col-lg-12">
                         <div class="card m-b-30">
                             <div class="card-body">
 
@@ -132,9 +132,11 @@
     </div>
 </div>
 <!---->
+<?php if(isset($eventDetails)) {?>
 			<script>
 				$( function() {
-                                    var eventId = <?= $eventDetails->eventId ?>;
+
+                                    var eventId = <?php if(isset($eventDetails)) echo $eventDetails->eventId; ?>;
 
 
 
@@ -160,6 +162,14 @@
 					},
 
 				});
+
+
+});
+</script>
+<?php } ?>
+<script type="text/javascript">
+                $( function() {
+
                                 $('#checkInUser').on('autocomplete.select', function(evt, item) {
 
                                         $("#selectedCheckInUser").val(item.id);
@@ -233,6 +243,7 @@
 
                                         //datatable
                                         var eventId = $("#eventId").val();
+                                        // alert(eventId);
                                         checkinsTable = $('#checkinsTable').DataTable({
                                             "serverSide": true,
                                             "destroy": true,

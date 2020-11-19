@@ -24,7 +24,9 @@ class Rooms extends Model {
      *
      * @var array
      */
-    protected $fillable = ['orgId','room_name','room_owner','contact_no','contact_email','room_desc','room_image','group_id', 'building_number','room_status','createdBy', 'created_at', 'updatedBy', 'updated_at', 'deletedBy', 'deleted_at'];
+    protected $fillable = [
+         'id', 'orgId', 'room_name', 'room_owner', 'contact_no', 'contact_email', 'room_desc', 'room_image', 'group_id', 'building_number', 'approval_group', 'room_status', 'location_id', 'createdBy', 'created_at', 'updatedBy', 'updated_at', 'deletedBy', 'deleted_at'
+    ];
 
     /**
      * The attributes excluded from the model's JSON form.

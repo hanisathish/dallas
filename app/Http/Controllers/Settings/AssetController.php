@@ -8,6 +8,7 @@ use App\Models\Location;
 use DB;
 use Config;
 use App\Models\Resources;
+use App\Models\Rooms;
 use App\Models\Roles;
 use Illuminate\Http\Response;
 use DataTables;
@@ -34,6 +35,7 @@ class AssetController extends Controller {
         $data['roles'] = Roles::selectFromRoles(['orgId'=>Auth::user()->orgId])->get();
         $data['category'] = \App\Models\MasterLookupData::selectFromMasterLookupData([["mldKey","=","resource_category"]])->get();
         $data['locations'] = Location::listLocations("")->get();
+        $data['rooms'] = Rooms::listRooms("")->get();
         return view('asset.create_resource', $data);
     }
 
@@ -116,6 +118,7 @@ class AssetController extends Controller {
         $resources = Resources::findOrFail($id);
         $data['locations'] = Location::listLocations("")->get();
         $data['resource'] = $resources;
+        $data['rooms'] = Rooms::listRooms("")->get();
         return view('asset.create_resource', $data);
     }
 

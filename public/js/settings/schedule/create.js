@@ -187,7 +187,7 @@ function validateForm() {
     let apiPath = siteUrl + '/api/settings/schedule/storeOrUpdateSchedule';
     let apiProps = { url: apiPath, method: 'post', queryData: schedule };
     fetchDataApi(apiProps, function (data) {
-        location = siteUrl + "/settings/schedulling";
+        location = siteUrl + "/settings/scheduling";
     });
 }
 

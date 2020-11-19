@@ -53,7 +53,7 @@ class PaymentGateways extends Model {
 		
 		//DB::enableQueryLog();
 		
-        $result = DB::table(DB::raw("(SELECT id, payment_gateway_id, orgId, gateway_name, active, CASE active WHEN '1' THEN 'Active' ELSE 'InActive' END AS active_status  FROM `payment_gateways` WHERE orgId = ".$orgId." UNION SELECT id, payment_gateway_id, orgId, gateway_name, active, CASE active WHEN '1' THEN 'Active' ELSE 'InActive' END AS active_status FROM `payment_gateways` WHERE orgId IS NULL and payment_gateway_id not in (SELECT payment_gateway_id FROM `payment_gateways` WHERE orgId = ".$orgId." ) ORDER BY id ) as payment_gateways_values"));
+        $result = DB::table(DB::raw("(SELECT id, payment_gateway_id, orgId, gateway_name, active, CASE active WHEN '1' THEN if(orgId is null,'InActive','Active') ELSE 'InActive' END AS active_status  FROM `payment_gateways` WHERE orgId = ".$orgId." UNION SELECT id, payment_gateway_id, orgId, gateway_name, active, CASE active WHEN '1' THEN if(orgId is null,'InActive','Active') ELSE 'InActive' END AS active_status FROM `payment_gateways` WHERE orgId IS NULL and payment_gateway_id not in (SELECT payment_gateway_id FROM `payment_gateways` WHERE orgId = ".$orgId." ) ORDER BY id ) as payment_gateways_values"));
 			
 		//dd(DB::getQueryLog($result->get()));
 		
@@ -144,7 +144,6 @@ class PaymentGateways extends Model {
         }
     }
 
-	
-	
+	 
 
 }

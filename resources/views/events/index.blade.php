@@ -1,6 +1,8 @@
 @extends('layouts.default')
 
 @section('content')
+<link href="{{ URL::asset('assets/select2/select2.css') }}" rel="stylesheet" type="text/css" />
+<script src="{{ URL:: asset('assets/select2/select2.js')}}"></script>    
             <!-- Page-Title -->
             <div class="row">
                 <div class="col-sm-12">
@@ -18,7 +20,7 @@
             <!-- end page title end breadcrumb -->
 
             <div class="row">
-                    <div class="col-lg-3">
+                    <div class="col-lg-3" style="display: none;">
                         <div class="card m-b-30">
                             <div class="card-body">
                                 <div class="button-items">
@@ -28,7 +30,7 @@
                             </div>
                         </div>
                     </div>
-            <div class="col-lg-9">
+            <div class="col-lg-12">
                         <div class="card m-b-30">
                             <div class="card-body">
 
@@ -39,8 +41,7 @@
                                 <div class="row">
                                 <div class="button-items col-md-6">
                                     <button type="button" onclick="createEventDialog()" class="btn btn-primary waves-effect waves-light">Create Event</button>
-
-
+ 
 
 
                                 </div>
@@ -86,9 +87,12 @@
 
             </div> <!-- end row -->
 
+    
+
             <script>
 
              $(document).ready(function() {
+  
                 initDatePicker();
                 loadDatatable();
 
@@ -149,6 +153,8 @@
                 }
 
             function createEventDialog(){
+
+                
                  CreateEventsDlg = BootstrapDialog.show({
                     title:"Create Event",
                     size:"size-wide",
@@ -169,20 +175,55 @@
                         }
                     ]
                 });
+
+                setTimeout(function(){ $(".eventSelect2").select2();}, 500);
             }
+
+                
+            
+    
 
             function submitCreateEvent(){
 
-                $('#create_event_form').ajaxForm(function(data) {
-                   $("#create_event_form_status").html(data.message);
-                   setTimeout(function(){
-                       CreateEventsDlg.close();
-                        eventsTable.draw(false);
-                    },2000);
+                chkEventValidateStatus = "";
+                chkEventValidateStatus = $("#create_event_form").validate({
+                    //ignore:[],// false,
+                    ignore: false,
+                    errorClass: "error",
+                    rules: {
+                        eventName: {
+                            required: true
+                        } 
+                    },
+                    messages: {
+                        eventName: {
+                            required: "Please Enter Event Name"
+                        } 
+                    }
                 });
 
-                //$("#create_event_form").submit();
-                $("#formSubmitBtn").click();
+                var formObj = $('#create_event_form');
+                var formData = new FormData(formObj[0]);
+
+                $("#create_event_form").valid();
+
+                var errorNumbers = chkEventValidateStatus.numberOfInvalids();
+                
+                // alert(errorNumbers);
+                
+                if (errorNumbers == 0) {
+
+                    $('#create_event_form').ajaxForm(function(data) {
+                       $("#create_event_form_status").html(data.message);
+                       setTimeout(function(){
+                           CreateEventsDlg.close();
+                            eventsTable.draw(false);
+                        },2000);
+                    });
+
+                    $("#create_event_form").submit();
+                    // $("#formSubmitBtn").click();
+                }
             }
 
             function editEvents(eventId){
@@ -206,6 +247,8 @@
                         }
                     ]
                 });
+
+                setTimeout(function(){ $(".eventSelect2").select2();}, 500);
             }
 
             function validateTime(elm){

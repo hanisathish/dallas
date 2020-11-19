@@ -237,7 +237,8 @@ class FormController extends Controller
             }
             $row[] = \Carbon\Carbon::parse($submission->created_at)->format('d-m-Y h:i');
             $link = "/settings/forms/". $form->id ."/submissions/". $submission->id;
-            $row[] = "<a href='".$link ."'><i class='fa fa-eye'></i></a>";
+            // $row[] = "<a href='".$link ."'><i class='fa fa-eye'></i></a>";
+            $row[] = "<a href='".asset($link) ."'><i class='fa fa-eye'></i></a>";
             $result[] = $row;
         }
 

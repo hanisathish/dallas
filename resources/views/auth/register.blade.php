@@ -111,7 +111,8 @@
                                     <a href="{{URL::asset('login').'/'.$crudOrganizationData[0]->orgDomain}}" class="text-muted">Already have account?</a>
                                 </div>
                             </div>
-                        </form>
+                        <!-- </form> -->
+                        {!! Form::close() !!}
                     </div>
 
                 </div>

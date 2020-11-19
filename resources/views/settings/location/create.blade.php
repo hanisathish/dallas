@@ -18,14 +18,14 @@
                                 <div class="form-group row">
                                     <label for="example-date-input" class="col-sm-3 col-form-label">Latitude</label>
                                     <div class="col-sm-9">
-                                        <input class="form-control" required="" type="text" value="{{ isset($location)?$location->latitude:'' }}" id="latitude" name="latitude" >
+                                        <input class="form-control" type="text" value="{{ isset($location)?$location->latitude:'' }}" id="latitude" name="latitude" >
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
                                     <label for="example-date-input" class="col-sm-3 col-form-label">Longitude</label>
                                     <div class="col-sm-9">
-                                        <input class="form-control" required="" type="text" value="{{ isset($location)?$location->longitude:'' }}" id="longitude" name="longitude" >
+                                        <input class="form-control" type="text" value="{{ isset($location)?$location->longitude:'' }}" id="longitude" name="longitude" >
                                     </div>
                                 </div>
 

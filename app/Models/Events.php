@@ -25,7 +25,7 @@ class Events extends Model {
      *
      * @var array
      */
-    protected $fillable = ['eventId', 'orgId', 'eventName', 'eventDesc', 'eventFreq', 'eventCreatedDate', 'eventCheckin', 'eventShowTime', 'eventStartCheckin', 'eventEndCheckin', 'eventLocation', 'eventRoom','createdBy', 'created_at', 'updatedBy', 'updated_at', 'deletedBy', 'deleted_at'];
+    protected $fillable = [ 'eventId', 'orgId', 'eventName', 'eventFreq', 'eventChildCare', 'eventDesc', 'eventCreatedDate', 'eventCheckin', 'eventShowTime', 'eventStartCheckin', 'eventEndCheckin', 'eventLocation', 'eventRoom', 'eventResource', 'createdBy', 'created_at', 'updatedBy', 'updated_at', 'deletedBy', 'deleted_at'];
 
     /**
      * The attributes excluded from the model's JSON form.

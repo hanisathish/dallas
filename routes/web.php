@@ -100,6 +100,8 @@ Route::post('webapp/login', 'PassportController@login');
 
 Route::post('site_login', 'PassportController@login');
 
+Route::post('forgotpwd', 'PassportController@forgotpwd');
+
 Route::get('webapp/logout/{orgDomain}', 'PassportController@logout');
 Route::get('logout/superadmin', 'PassportController@superadmin_logout');
 
@@ -189,25 +191,25 @@ Route::post("/api/settings/forms/manage/{form_id?}", 'Settings\FormController@st
 Route::get('/api/settings/forms/content/{form_id}', 'Settings\FormController@getFormDetails');
 
 // Settings => Schedulling
-Route::get("/settings/schedulling", "Settings\SchedullingController@schedullingIndex")->name('schedule.list');
-Route::get("/settings/schedulling/notifications", "Settings\SchedullingController@notificationList")->name('schedule.notifications');
-Route::get("/api/settings/schedule/list", 'Settings\SchedullingController@getScheduleList');
-Route::get("/api/settings/schedule/notificationsList/{template_id?}", 'Settings\SchedullingController@getNotificationsList');
-Route::get("/settings/schedulling/manage/{schedule_id?}", 'Settings\SchedullingController@createOrEditPage');
-Route::post("/api/settings/schedule/createRelatedData", 'Settings\SchedullingController@createRelatedData');
-Route::post("/api/settings/schedule/getAssignedMembersList", "Settings\SchedullingController@getAssignedMembersList");
-Route::post("/api/settings/schedule/getMemberSearchList", "Settings\SchedullingController@getMemberSearchList");
-Route::post("/api/settings/schedule/storeOrUpdateSchedule", "Settings\SchedullingController@storeOrUpdateSchedule");
-Route::get("/settings/schedulling/{schedule_id}", "Settings\SchedullingController@schedullingDetails");
+Route::get("/settings/scheduling", "Settings\ScheduleController@schedullingIndex")->name('schedule.list');
+Route::get("/settings/scheduling/notifications", "Settings\ScheduleController@notificationList")->name('schedule.notifications');
+Route::get("/api/settings/schedule/list", 'Settings\ScheduleController@getScheduleList');
+Route::get("/api/settings/schedule/notificationsList/{template_id?}", 'Settings\ScheduleController@getNotificationsList');
+Route::get("/settings/scheduling/manage/{schedule_id?}", 'Settings\ScheduleController@createOrEditPage');
+Route::post("/api/settings/schedule/createRelatedData", 'Settings\ScheduleController@createRelatedData');
+Route::post("/api/settings/schedule/getAssignedMembersList", "Settings\ScheduleController@getAssignedMembersList");
+Route::post("/api/settings/schedule/getMemberSearchList", "Settings\ScheduleController@getMemberSearchList");
+Route::post("/api/settings/schedule/storeOrUpdateSchedule", "Settings\ScheduleController@storeOrUpdateSchedule");
+Route::get("/settings/scheduling/{schedule_id}", "Settings\ScheduleController@schedullingDetails");
 Route::post("/settings/position/load_schedule_positions", "Settings\PositionController@loadTeamPositions");
 Route::post("/settings/position/load_member_on_ass_schedule", "Settings\PositionController@loadMemberWithPositions");
 Route::post("/settings/position/manual_assign_user_schedule", "Settings\PositionController@manualAssignUserSchdule");
 
-//Route::post("/settings/schedulling/store", "Settings\PositionController@storeOrUpdateSchedule");
-Route::post('/settings/schedulling/store', 'Settings\SchedullingController@storeOrUpdateSchedule')->name('settings.schedulling.store');
+//Route::post("/settings/scheduling/store", "Settings\PositionController@storeOrUpdateSchedule");
+Route::post('/settings/scheduling/store', 'Settings\ScheduleController@storeOrUpdateSchedule')->name('settings.scheduling.store');
 
 //checkin
-Route::get('checkin/{eventId}', 'CheckinController@index');
+Route::get('checkin/list/{eventId}', 'CheckinController@index');
 //Route::get('checkin', 'CheckinController@index');
 Route::get('checkin/adult', 'CheckinController@adultCheckin');
 Route::get('checkin/child', 'CheckinController@childCheckin');

@@ -11,35 +11,39 @@
                                     <div class="col-sm-9">
                                         <input class="form-control" required="" type="text" id="eventName" name="eventName" value="{{ isset($event)?$event->eventName:'' }}">
                                         <div class="row">
-                                            <div class="col-md-4">
-                                                Start Time:
-                                                <select required="" id="eventStartCheckin" name="eventStartCheckin" class="form-control create-time" onchange="validateTime(this)">
+                                            <div class="col-md-5">
+                                                Start Time: (HH:MM am/pm)
+                                                <input type="time" required="" id="eventStartCheckin" name="eventStartCheckin" class="form-control create-time" value="{{ isset($event)?date('H:i',strtotime($event->eventStartCheckin)):'' }}" placeholder=""> 
+
+                                                <!-- <select required="" id="eventStartCheckin" name="eventStartCheckin" class="form-control create-time" onchange="validateTime(this)">
                                                     <option value=""> -- Select -- </option>
                                                     <?php for($i = 1; $i <= 24; $i++): ?>
                                                     <?php $selected= isset($event)?($event->eventStartCheckin==date("H:i:s", strtotime("$i:00:00")))?'selected':'':''; ?>
                                                         <option value="<?= date("H:i", strtotime("$i:00")) ?>" {{$selected}}><?= date("h.iA", strtotime("$i:00")); ?></option>
                                                     <?php endfor; ?>
-                                                </select>
+                                                </select> -->
                                             </div>
-                                            <div class="col-md-4">
-                                                End Time:
-                                                <select id="eventEndCheckin" required="" name="eventEndCheckin" class="form-control create-time" onchange="validateTime(this)">
+                                            <div class="col-md-5">
+                                                End Time: (HH:MM am/pm)
+                                                <input type="time" required="" id="eventEndCheckin" name="eventEndCheckin" class="form-control create-time" value="{{ isset($event)?date('H:i',strtotime($event->eventEndCheckin)):'' }}" placeholder="">
+                                                <!-- <select id="eventEndCheckin" required="" name="eventEndCheckin" class="form-control create-time" onchange="validateTime(this)">
                                                     <option value=""> -- Select -- </option>
                                                     <?php for($i = 1; $i <= 24; $i++): ?>
                                                     <?php $selected= isset($event)?($event->eventEndCheckin==date("H:i:s", strtotime("$i:00:00")))?'selected':'':''; ?>
                                                         <option value="<?= date("H:i", strtotime("$i:00")) ?>" {{$selected}}><?= date("h.iA", strtotime("$i:00")); ?></option>
                                                     <?php endfor; ?>
-                                                </select>
+                                                </select> -->
                                             </div>
-                                             <div class="col-md-4">
-                                                Show Time:
-                                                <select id="eventShowTime" required="" name="eventShowTime" class="form-control create-time" onchange="validateTime(this)">
+                                             <div class="col-md-4" style="display: none;">
+                                                Show Time: (HH:MM am/pm)
+                                                <input  id="eventShowTime" name="eventShowTime" class="form-control create-time" value="{{ isset($event)?$event->eventShowTime:'' }}" placeholder="00:00:00">
+                                                <!-- <select id="eventShowTime" required="" name="eventShowTime" class="form-control create-time" onchange="validateTime(this)">
                                                     <option value=""> -- Select -- </option>
                                                     <?php for($i = 1; $i <= 24; $i++): ?>
                                                     <?php $selected= isset($event)?($event->eventShowTime==date("H:i:s", strtotime("$i:00:00")))?'selected':'':''; ?>
                                                         <option value="<?= date("H:i", strtotime("$i:00")) ?>" {{$selected}}><?= date("h.iA", strtotime("$i:00")); ?></option>
                                                     <?php endfor; ?>
-                                                </select>
+                                                </select> -->
                                             </div>
                                         </div>
                                     </div>
@@ -74,7 +78,12 @@
                                 <div class="form-group row">
                                     <label for="example-date-input" class="col-sm-3 col-form-label">Child Care</label>
                                     <div class="col-sm-9">
-                                        <input class="form-control" type="text" value="" id="eventChildCare" name="eventChildCare" >
+                                        <select id="eventChildCare" name="eventChildCare" class="form-control" required=""  >
+                                            <option value="1" <?= isset($event)?($event->eventChildCare=='1')?'selected':'':'' ?>>Yes</option>
+                                            <option value="2" <?= isset($event)?($event->eventChildCare=='2')?'selected':'':'' ?>>No</option>
+                                             
+                                        </select>
+                                         
                                     </div>
                                 </div>
 
@@ -84,16 +93,18 @@
                                         <select id="eventLocation" name="eventLocation" class="form-control" required="">
 
                                             <option value=""> -- Select -- </option>
-                                            @foreach($locations as $value)
-                                            <option value="{{$value->id}}" @if(isset($event) &&  $event->eventLocation == $value->id) selected @endif>{{$value->name}}</option>
-                                            @endforeach
+                                            @if($locations->count())
+                                                @foreach($locations as $value)
+                                                <option value="{{$value->id}}" @if(isset($event) &&  $event->eventLocation == $value->id) selected @endif>{{$value->name}}</option>
+                                                @endforeach
+                                            @endif    
 
                                         </select>
 
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
+                                <div class="form-group row" style="display: none;">
                                     <label for="example-date-input" class="col-sm-3 col-form-label">Building Block</label>
                                     <div class="col-sm-9">
                                         <select id="eventBuildingBlock" name="eventBuildingBlock" class="form-control">
@@ -106,7 +117,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
+                                <div class="form-group row" style="display: none;">
                                     <label for="example-date-input" class="col-sm-3 col-form-label">Booked For</label>
                                     <div class="col-sm-9">
                                         <select id="eventBookedFor" name="eventBookedFor" class="form-control">
@@ -123,11 +134,12 @@
                                     <label for="example-date-input" class="col-sm-3 col-form-label">Room</label>
                                     <div class="col-sm-9">
                                         <select id="eventRoom" name="eventRoom" class="form-control">
-                                                <option value="">-- Select --</option>
-                                            @foreach($rooms as $value)
-                                            <option value="{{$value->id}}" @if(isset($event) &&  $event->eventRoom == $value->id) selected @endif>{{$value->room_name}}</option>
-                                            @endforeach
-
+                                            <option value="">-- Select --</option>
+                                                @if($rooms->count() > 0)
+                                                    @foreach($rooms as $value)
+                                                    <option value="{{$value->id}}" @if(isset($event) &&  $event->eventRoom == $value->id) selected @endif>{{$value->room_name}}</option>
+                                                    @endforeach
+                                                @endif
 
                                         </select>
 
@@ -137,25 +149,41 @@
                                 <div class="form-group row">
                                     <label for="example-date-input" class="col-sm-3 col-form-label">Suggested Resources</label>
                                     <div class="col-sm-9">
-                                        <select id="eventSuggestedResources" name="eventSuggestedResources" class="form-control">
-                                            <option value="Food Table">Food Table</option>
-                                            <option value="Mobile">Mobile</option>
-                                            <option value="Chair">Chair</option>
+                                        <select id="eventResource" name="eventResource[]" class="form-control eventSelect2" multiple="multiple">
+                                            @if($resources->count() > 0)
+                                                @foreach($resources as $value)
+                                                <?php
+                                                if(isset($event) && in_array($value->id, explode(",", $event->eventResource))){
+                                                    $selected = "selected";
+                                                }else{
+                                                    $selected = "";
+                                                }
+                                                        
+                                                ?>
+                                                <option value="{{$value->id}}"  {{$selected}} >{{$value->item_name}}</option>
+                                                @endforeach
+                                            @endif 
                                         </select>
 
                                     </div>
                                 </div>
+                                <?php if(isset($event)){
+                                    $notifychecked="";
+                                }else{
+                                    $notifychecked="checked";
+                                }
 
+                                ?>
                                  <div class="form-group row">
                                     <label for="example-date-input" class="col-sm-3 col-form-label">Notification</label>
                                     <div class="col-sm-4">
-                                        <label class="radio-inline"><input type="radio" name="eventNotification"  value="yes">Yes</label>
+                                        <label class="radio-inline"><input type="radio" name="eventNotification" id="eventNotification"  value="1" @if(isset($event) &&  $event->eventNotification == 1) checked @endif>Yes</label>
 
 
                                     </div>
                                     <div class="col-sm-4">
 
-                                        <label class="radio-inline"><input type="radio" name="eventNotification" checked value="no">No</label>
+                                        <label class="radio-inline"><input type="radio" name="eventNotification" id="eventNotification"   value="2" @if(isset($event) &&  $event->eventNotification == 2) checked @endif {{$notifychecked}}>No</label>
 
                                     </div>
                                 </div>
@@ -168,3 +196,4 @@
  <input type="hidden" name="eventId" value="{{ isset($event)?$event->eventId:'' }}" />
  <input type="submit" id="formSubmitBtn" style="display: none;"/>
 </form>
+

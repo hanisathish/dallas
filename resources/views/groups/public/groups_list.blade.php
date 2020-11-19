@@ -9,7 +9,7 @@
     	 @foreach ($group_types as $types)
 
 		    <?php
-               $whereArray = array('groupType_id' => $types->id );											   
+               $whereArray = array('groupType_id' => $types->id );						
                $group = \App\Models\Group::getGroupCount($whereArray)->get()[0];
             ?>
 
@@ -19,7 +19,9 @@
 			
 			<p class="mb-0 m-t-20 text-muted">
 	            	<span class="pull-left">
-	            		<a href="{{URL::asset($org.'/groups/list')}}/{{ $types->id }}" type="button" class="btn btn-primary waves-effect waves-light"><i class="fa fa-plus"></i>View Groups</a>
+	            		@if($group->group_count > 0)
+	            			<a href="{{URL::asset($org.'/groups/list')}}/{{ $types->id }}" type="button" class="btn btn-primary waves-effect waves-light"><i class="fa fa-plus"></i>View Groups</a>
+	            		@endif
 
 	            	</span>
 

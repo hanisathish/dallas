@@ -322,10 +322,17 @@
                                 </div>
                             </li>
                             <!-- User-->
+                            <?php
+                            $profile_pic_image= url('/assets/theme/images/users/avatar-1.jpg');
+                            if(isset($user['profile_pic'])){
+                                $profile_pic_image_json = json_decode(unserialize($user->profile_pic));
+                                $profile_pic_image = $profile_pic_image_json->download_path.$profile_pic_image_json->uploaded_file_name;
+                            }
+                            ?>
                             <li class="list-inline-item dropdown notification-list">
                                 <a class="nav-link dropdown-toggle arrow-none waves-effect nav-user" data-toggle="dropdown" href="#" role="button"
                                    aria-haspopup="false" aria-expanded="false">
-                                    <img src="{{ URL::asset('assets/theme/images/users/avatar-1.jpg')}}" alt="user" class="rounded-circle">
+                                    <img src="{{ $profile_pic_image }}" alt="user" class="rounded-circle">
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
                                     <a class="dropdown-item" href="{{URL::asset('/people/member').'/'.$userSessionData['umPersonal_id']}}"><i class="dripicons-user text-muted"></i> Profile</a>
@@ -442,8 +449,8 @@
                                     <li @if($url_segment_one == "settings" && $url_segment_two == "forms") class='active' @else @endif>
                                         <a href="{{URL::asset('/settings/forms')}}">Forms</a>
                                     </li>
-                                    <li @if($url_segment_one == "settings" && $url_segment_two == "schedulling") class='active' @else @endif>
-                                        <a href="{{URL::asset('/settings/schedulling')}}">Schedlling</a>
+                                    <li @if($url_segment_one == "settings" && $url_segment_two == "scheduling") class='active' @else @endif>
+                                        <a href="{{URL::asset('/settings/scheduling')}}">Scheduling</a>
                                     </li>
                                      <li @if($url_segment_one == "settings" && $url_segment_two == "asset_management") class='active' @else @endif>
                                         <a href="{{URL::asset('/settings/asset_management/resources')}}">Asset Management</a>

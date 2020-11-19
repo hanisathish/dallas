@@ -42,7 +42,8 @@ function gTypeChanged() {
 }
 
 function updateTabUrlLinks() {
-    let pathNames = [{ path: '/groups', title: "Groups" }, { path: '/groups/reports', title: "Reports" }, { path: '/groups/events', title: "Events" }, { path: '/groups/resources', title: "Resources" }];
+    //let pathNames = [{ path: '/groups', title: "Groups" }, { path: '/groups/reports', title: "Reports" }, { path: '/groups/events', title: "Events" }, { path: '/groups/resources', title: "Resources" }];
+    let pathNames = [{ path: '/groups', title: "Groups" }];
     let querySring = generateQueryString(queries);
 
     let tabEls = pathNames.map(function (item) {

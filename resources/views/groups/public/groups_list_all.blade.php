@@ -18,15 +18,15 @@
 					      $profile_pic_image = $group_image_json->original_filename;
 					  ?>
 
-					    @php ($groupImg = $types->orgId.'/group/'.$types->id.'/'.$profile_pic_image)
+					    @php ($groupImg = 'assets/uploads/organizations/'.$types->orgId.'/group/'.$types->id.'/'.$profile_pic_image)
 					
 					  @else 
                      
-					    @php ($groupImg = " ")
+					    @php ($groupImg = "/assets/uploads/groupdefault.png")
 
 					  @endif
 	            	<span class="pull-left">	            		
-	            			<img class="d-flex mr-3 rounded-square" src="{{ URL::asset('assets/uploads/organizations/'.$groupImg)}}" alt="Group image" height="70" />
+	            			<img class="d-flex mr-3 rounded-square" src="{{URL::asset($groupImg)}}" alt="Group image" height="70" />
 	            	</span></p>
 
 			<p class="card-text">

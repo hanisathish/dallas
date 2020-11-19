@@ -1165,7 +1165,7 @@ INSERT INTO `comm_templates` (`id`, `tag`, `name`, `subject`, `body`, `org_id`, 
 
 ALTER TABLE `comm_details` CHANGE `updated_at` `updated_at` TIMESTAMP on update CURRENT_TIMESTAMP NULL; 
 
--- Sathish 12 aug 2020
+-- Sathish 12 aug 2020 
 ALTER TABLE `comm_details` CHANGE `updated_at` `updated_at` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP; 
 ALTER TABLE `cron_batch_email`  ADD `recipient_user_id` BIGINT(20) NULL DEFAULT NULL  AFTER `cron_id`;
 
@@ -1221,3 +1221,53 @@ ADD `guest_f_name` VARCHAR( 255 ) NULL DEFAULT NULL AFTER `notify_user_id` ,
 ADD `guest_l_name` VARCHAR( 255 ) NULL DEFAULT NULL AFTER `guest_f_name` ,
 ADD `guest_email` VARCHAR( 255 ) NULL DEFAULT NULL AFTER `guest_l_name` ,
 ADD `guest_mobile` VARCHAR( 255 ) NULL DEFAULT NULL AFTER `guest_email` ;
+
+-------- 03 oct 2020 not executed
+INSERT INTO `comm_templates` (`id`, `tag`, `name`, `subject`, `body`, `org_id`, `createdBy`, `created_at`, `updatedBy`, `updated_at`, `deletedBy`, `deleted_at`) VALUES (NULL, 'notify_member_make_leader', 'Made as a Leader', 'Made as a Leader', 'Made as a Leader for group', '0', NULL, '2019-08-21 18:01:18', NULL, '0000-00-00 00:00:00', NULL, NULL);
+
+-- 13 oct 2020 
+
+ALTER TABLE `locations` CHANGE `latitude` `latitude` VARCHAR( 100 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL ,
+CHANGE `longitude` `longitude` VARCHAR( 100 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL ;
+
+
+-- not executed 7th nov 2020
+
+ALTER TABLE `events` ADD `eventChildCare` TINYINT( 1 ) NULL DEFAULT NULL AFTER `eventFreq` ;
+
+ALTER TABLE `resources` CHANGE `notification_period` `notification_period` VARCHAR( 200 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL ;
+
+ALTER TABLE `events` ADD `eventNotification` TINYINT( 1 ) NOT NULL DEFAULT '1' COMMENT '1=Yes, 2= No' AFTER `eventResource` ;
+
+ALTER TABLE `events` CHANGE `eventChildCare` `eventChildCare` TINYINT( 1 ) NULL DEFAULT NULL COMMENT '1=Yes, 2=No';
+
+ALTER TABLE `events` CHANGE `eventResource` `eventResource` TEXT NULL DEFAULT NULL ;
+
+ALTER TABLE `rooms` ADD `location_id` BIGINT( 11 ) NULL DEFAULT NULL AFTER `room_status` ;
+
+ALTER TABLE `users` CHANGE `address` `street address` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL ;
+
+ALTER TABLE `users` ADD `apt_address` TEXT NULL DEFAULT NULL AFTER `street address` ,
+ADD `city_address` TEXT NULL DEFAULT NULL AFTER `apt_address` ,
+ADD `state_address` TEXT NULL DEFAULT NULL AFTER `city_address` ,
+ADD `zip_address` TEXT NULL DEFAULT NULL AFTER `state_address` ;
+
+ALTER TABLE `users` CHANGE `street address` `street_address` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL ;
+
+INSERT INTO `dallas`.`comm_templates` (
+`id` ,
+`tag` ,
+`name` ,
+`subject` ,
+`body` ,
+`org_id` ,
+`createdBy` ,
+`created_at` ,
+`updatedBy` ,
+`updated_at` ,
+`deletedBy` ,
+`deleted_at`
+)
+VALUES (
+NULL , 'forgot_password', 'Forgot Password', 'Forgot Password Sujbect', 'Forgot Password Body', '0', NULL , '2019-08-21 18:01:18', NULL , '0000-00-00 00:00:00', NULL , NULL
+);

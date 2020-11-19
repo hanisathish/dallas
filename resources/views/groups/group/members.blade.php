@@ -159,8 +159,8 @@ function removeMember(memberId){
         title:"Remove Member",
         //size:"size-wide",
         message: '<div >Are you sure you want to remove member from the group?</div> <div style="position: relative;"> \
-        <input type="checkbox" name="notify_member" id="notify_member" value="1" class="checkbox"> \
-        <label class="checkbox-label c-dark" for="notify_member">Notify Member</label> \
+        <input type="checkbox" name="notify_member_role" id="notify_member_role" value="1" class="checkbox"> \
+        <label class="checkbox-label c-dark" for="notify_member_role">Notify Member</label> \
       </div>',
         buttons: [
             {
@@ -208,7 +208,7 @@ function editMembershipDate (memberId){
 }
 
 
-function makeLeader(memberId){
+function makeLeader(memberId,grp_user_id){
     actionDlg = BootstrapDialog.show({
         title:"Make Leader",
         //size:"size-wide",
@@ -222,7 +222,7 @@ function makeLeader(memberId){
                 cssClass: 'btn-primary',
                 action: function(dialogRef){
                     //submitAddMember();
-                    memberAction("make_leader",memberId);
+                    memberAction("make_leader",memberId,grp_user_id);
                 }
             },
             {
@@ -235,14 +235,15 @@ function makeLeader(memberId){
 });
 }
 
-function memberAction(action,memberId){
-    notify_member=  $("#notify_member").prop("checked");
+function memberAction(action,memberId,grp_user_id){
+    // notify_member=  $("#notify_member").prop("checked");
+    // alert(notify_member);
     member_since_dlg=  $("#member_since_dlg").val();
     notify_member_role=  $("#notify_member_role").prop("checked");
     $.ajax({
       type: 'POST',
       url: siteUrl+"/groups/members/action",
-      data: {action:action,memberId:memberId,notify_member:notify_member,member_since:member_since_dlg,notify_member_role:notify_member_role},
+      data: {action:action,memberId:memberId,member_since:member_since_dlg,notify_member_role:notify_member_role,grp_user_id:grp_user_id},
 
       success: function(resultData) {
         actionDlg.close();

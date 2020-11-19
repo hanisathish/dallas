@@ -81,7 +81,7 @@
                                        <label for="example-date-input" class="col-sm-3 col-form-label">Location</label>
                                        <div class="col-sm-9">
 
-                                            <select id="location" name="location" class="form-control" required="">
+                                            <select id="location" name="location" class="form-control" >
 
                                                     <option value=""> -- Select -- </option>
                                                     @foreach($locations as $value)

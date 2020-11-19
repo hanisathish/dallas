@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use DB;
 use Config;
 use App\Models\Rooms;
+use App\Models\Location;
 use Illuminate\Http\Response;
 use DataTables;
 use Auth;
@@ -32,7 +33,7 @@ class RoomController extends Controller {
         $data['title'] = $this->browserTitle . " - Create Resource";
         $data['roles'] = Roles::selectFromRoles(['orgId'=>Auth::user()->orgId])->get();
         $data['room_group'] = \App\Models\MasterLookupData::selectFromMasterLookupData([["mldKey","=","room_group"]])->get();
-
+        $data['locations'] = Location::listLocations("")->get();
         return view('asset.create_room', $data);
     }
 
@@ -115,7 +116,7 @@ class RoomController extends Controller {
         $data['roles'] = Roles::selectFromRoles(['orgId'=>Auth::user()->orgId])->get();
         $data['room_group'] = \App\Models\MasterLookupData::selectFromMasterLookupData([["mldKey","=","room_group"]])->get();
         $room = Rooms::findOrFail($id);
-
+        $data['locations'] = Location::listLocations("")->get();
         $data['room'] = $room;
         return view('asset.create_room', $data);
     }

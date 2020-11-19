@@ -45,7 +45,7 @@ class Group extends Model
 
 
     public static function getGroups($groupType,$search=""){
-        $result = self::select(DB::raw('SQL_CALC_FOUND_ROWS  groups.id'), 'groups.name', 'groups.description','groups.created_at')
+        $result = self::select(DB::raw('SQL_CALC_FOUND_ROWS  groups.id'), 'groups.name', 'groups.description','groups.created_at','groups.image_path')
                         ->addSelect(DB::raw("COUNT(group_members.id) as memberCount"))
                         ->addSelect(DB::raw("MAX(group_events.end_date) as last_meeting"))
                         ->addSelect(DB::raw("MIN(ge2.start_date) as next_meeting"))

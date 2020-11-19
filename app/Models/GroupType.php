@@ -30,7 +30,7 @@ class GroupType extends Model
 
 
 
-                return $query->where('p_title', 'name', "%$search%")
+                return $query->where('name', 'like', "%$search%")
                                 ->orWhere('description', 'LIKE', "%$search%");
 
                 //echo date("d m y",(int)$search);

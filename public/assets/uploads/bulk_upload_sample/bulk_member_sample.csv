@@ -1,3 +1,3 @@
-email,first_name,last_name,mobile
-sathish@cobrasoftwares.org,Sathish,K,9879879871
-tom@gmail.com,Tommy,H,8765431911
+prefix,first_name ,middle_name,last_name ,suffix,nickname,email ,mobile_no,state_address,apt_address,city_address,state_address,zip_address,user_type,gender,birthdate,social_profile
+,Sauuu,,K,,,gt@ss.org,9879879871,,,,,,,,,
+,VTU,,H,,,vt@gmail.com,8765431911,,,,,,,,,

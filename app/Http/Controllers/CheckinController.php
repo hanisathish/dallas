@@ -239,7 +239,8 @@ group by household_user.user_id
      * @Added Date : Jun 12, 2019
      */
     public function notificationCheckin(Request $request) {        
-        $data['title'] = $this->browserTitle . " - Notification Checkin";        
+        $data['title'] = $this->browserTitle . " - Notification Checkin";
+        // dd($data);        
         return view('checkin.notification',$data);
     }
 

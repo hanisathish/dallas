@@ -289,7 +289,7 @@ class UserController extends Controller {
                 $userMasterData['personal_id'] = $newPersonal_id;
                 $userMasterData['householdName'] = $request->first_name."'s household";
                 $userMasterData['password'] = "password";
-                $userMasterData['address'] = $request->street_address.",".$request->apt_address.",".$request->city_address.",".$request->state_address." - ".$request->zip_address;
+                // $userMasterData['address'] = $request->street_address.",".$request->apt_address.",".$request->city_address.",".$request->state_address." - ".$request->zip_address;
 
                 $insertUser = User::create($userMasterData);
 

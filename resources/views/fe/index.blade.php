@@ -749,9 +749,7 @@
           </div>
         </div> 
         <div class="row no-gutters block-12">
-          <div class="col-md-10 order-md-last d-flex">
-           
-            
+          <div class="col-md-6 order-md-last d-flex">
             {!! Form::open(array('id'=>'siteLoginForm','name'=>'siteLoginForm','method' => 'post', 'url' => url('site_login'), 'class' => 'bg-light p-12 signin-form')) !!}
             @csrf
                
@@ -764,16 +762,42 @@
               <div class="form-group text-center m-t-20">
                     <div class="col-12">
                         <button class="btn btn-info btn-block waves-effect waves-light" id="btnSignIn" type="button">SignIn</button>
+
+                        <a href="#forgotpassword" class="forgotPassword" id="forgotPassword" >Click here</a> for Forgot Password
                     </div>
                 </div>
-            </form>
-          
+            </form>          
           </div>
+          <!-------forgot pwd------->
 
-           
+          <div class="col-md-6 order-md-last forgotpwddiv forgotpassword" style="display: none;">
+
+            <div class="row justify-content-center "> <!--mb-5 pb-3-->
+              <div class="col-md-12 heading-section text-center ftco-animate">
+                <span class="">Forgot your password / username? <br/>Enter your email here to reset.</span>                
+              </div>
+            </div> 
+                {!! Form::open(array('id'=>'siteForgotPwdForm','name'=>'siteForgotPwdForm','method' => 'post', 'url' => url('forgotpwd'), 'class' => 'bg-light p-12 forgot-password-form')) !!}
+                @csrf
+               
+                <div class="form-group">
+                    <input autocomplete="off" id="forgot_email" type="text" class="form-control" name="forgot_email"     autofocus required placeholder="Enter your Email address">
+                </div>
+               
+                <div class="form-group text-center m-t-20">
+                    <div class="col-12">
+                        <button class="btn btn-info btn-block waves-effect waves-light" id="btnForgotPwd" type="submit">Submit</button>
+                    </div>
+                    <div class="col-12 forgotpwdspan"></div>
+                </div>
+            </form>          
+          </div>
+        
+          <!-----forgot pwd------>
         </div>
       </div>
     </section>
+ 
 
 <script src="{{ URL:: asset('js/custom/org_register.js')}}"></script>
 

@@ -34,7 +34,7 @@ class PublicController extends Controller
                 $data['gType'] = "all";
             }
             
-            $whereArray = array();
+            $whereArray = array('orgId' => $org->orgId);
             			
             $data['group_types'] = GroupType::selectFromGroupType($whereArray,null,null,null,null,null,null,'1')->get();
             

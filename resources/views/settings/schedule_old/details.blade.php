@@ -9,8 +9,8 @@
                 <!-- <div class="card m-b-30"> -->
                     <div class="card-body pl-0 pr-0">
                         <h5 class="mt-0 pl-3"> {{$schedule->title}}
-                        <a href="{{ URL::asset('/settings/schedulling')}}" class="btn btn-secondary btn-sm pull-right ml-3">Back to List</a>
-                            <a href="{{ URL::asset('/settings/schedulling/manage/'. $schedule->id)}}" class="btn btn-primary btn-sm pull-right">Edit</a>
+                        <a href="{{ URL::asset('/settings/scheduling')}}" class="btn btn-secondary btn-sm pull-right ml-3">Back to List</a>
+                            <a href="{{ URL::asset('/settings/scheduling/manage/'. $schedule->id)}}" class="btn btn-primary btn-sm pull-right">Edit</a>
                         </h5><hr/>
                         <div class="row card pane p-0 m-0">
                             @if(count($schedule->members) <= 0)

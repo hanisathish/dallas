@@ -17,6 +17,8 @@
             </div>
             <!--<h4 class="page-title">Member Directory</h4>-->
             <a href="{{URL::asset('people/member/management')}}" type="button" class="btn btn-primary waves-effect waves-light"><i class="fa fa-plus"></i>Add Person</a>
+
+            <a href="{{URL::asset('settings/bulkupload')}}" type="button" class="btn btn-warning waves-effect waves-light"><i class="fa fa-upload"></i>Bulk Upload</a>
         </div>
     </div>
 </div>

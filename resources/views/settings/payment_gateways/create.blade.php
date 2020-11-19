@@ -2,6 +2,23 @@
 
 @section('content')
 
+<?php
+$inactive = 'selected';
+$active = '';
+
+if(isset($selectFromPaymentGateways) && $selectFromPaymentGateways->active==0){
+    $inactive = '';
+}
+
+if(isset($selectFromPaymentGateways) && $selectFromPaymentGateways->active==1){
+    $active = 'selected';
+}
+if($selectFromPaymentGateways->orgId == null){
+    $inactive = 'selected';
+    $active = '';
+}
+// dd($active,$inactive);
+?>
 <!-- Page-Title -->
 <div class="row">
     <div class="col-sm-12">
@@ -45,9 +62,8 @@
                                             <div class="col-sm-9">                                                
                                                 <select  name='active' id='active' class='form-control'>
                                                     <option value="">--Select--</option>
-                                                    <option {{ (isset($selectFromPaymentGateways) && $selectFromPaymentGateways->active==0)?'selected':''}}  value="0">Inactive</option>                        
-                                                    
-                                                    <option {{ (isset($selectFromPaymentGateways) && $selectFromPaymentGateways->active==1)?'selected':''}}  value="1">Active</option>                        
+                                                    <option {{$inactive}} value="0">Inactive</option>
+                                                    <option {{$active}} value="1">Active</option>                        
                                                                             
                                                 </select>   
                                             </div>

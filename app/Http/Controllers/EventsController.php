@@ -8,6 +8,7 @@ use Config;
 use App\Models\Events;
 use App\Models\Location;
 use App\Models\Rooms;
+use App\Models\Resources;
 use Illuminate\Http\Response;
 use DataTables;
 use Auth;
@@ -33,10 +34,13 @@ class EventsController extends Controller
 
 
     public function createPage(Request $request){
-         $data['title'] = $this->browserTitle . " - Create Event";
-         $data['rooms'] = Rooms::listRooms("")->get();
-         $data['locations'] = Location::listLocations("")->get();
-
+        $data['title'] = $this->browserTitle . " - Create Event";
+        $data['rooms'] = Rooms::listRooms("")->get();
+        $data['locations'] = Location::listLocations("")->get();
+        $data['resources'] = Resources::listResources("")->get();
+        // dd($data['resources']);
+        // dd($data['locations']->count());
+        //$data['event'] = '';
         return view('events.create_page',$data);
     }
 
@@ -51,16 +55,18 @@ class EventsController extends Controller
     public function store(Request $request)
     {
         $insertData = $request->all();
-
+        
         $eventId = $request->eventId;
 
         //validation rules
 
-        $insertData = $request->except(['eventId','_token','eventChildCare','eventBuildingBlock','eventBookedFor','eventSuggestedResources','eventNotification']);
-
+        $insertData = $request->except(['eventId','_token','eventBuildingBlock','eventBookedFor']);
+        // dd($request->eventResource);
         if($eventId > 0) { //update
             $insertData['updatedBy']= Auth::id();
-
+            if($request->eventResource){
+                $insertData['eventResource'] = implode(",", $request->eventResource);
+            }
 
             Events::where("eventId",$eventId)->update($insertData);
         }
@@ -68,6 +74,10 @@ class EventsController extends Controller
             $insertData['createdBy']= Auth::id();
             $insertData['orgId']= Auth::user()->orgId;
 
+            if($request->eventResource){
+                $insertData['eventResource'] = implode(",", $request->eventResource);
+            }
+            
             Events::create($insertData);
         }
 
@@ -90,7 +100,7 @@ class EventsController extends Controller
 
                     ->addColumn('action', function($row){
                             $btn = '<a onclick="editEvents('.$row->eventId.')"  class="edit btn btn-primary btn-sm ">Edit</a>';
-                           $btn.= '&nbsp;&nbsp;<a href="'.url('/').'/checkin/'.$row->eventId.'" class="edit btn btn-primary btn-sm">Show</a>';
+                           $btn.= '&nbsp;&nbsp;<a href="'.url('/').'/checkin/list/'.$row->eventId.'" class="edit btn btn-primary btn-sm">Show</a>';
 
                             return $btn;
                     })
@@ -104,6 +114,7 @@ class EventsController extends Controller
         $data['locations'] = Location::listLocations("")->get();
         $data['event'] = $event;
         $data['rooms'] = Rooms::listRooms("")->get();
+        $data['resources'] = Resources::listResources("")->get();
         return view('events.create_page',$data);
     }
     /**

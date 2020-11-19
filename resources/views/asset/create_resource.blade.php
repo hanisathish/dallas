@@ -15,7 +15,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
+                                <!-- <div class="form-group row">
                                     <label for="example-date-input" class="col-sm-3 col-form-label">Category</label>
                                     <div class="col-sm-9">
                                         <select id="category_id" required="" name="category_id" class="form-control" value="{{ isset($resource)?$resource->category_id:'' }}">
@@ -25,7 +25,7 @@
                                            @endforeach
                                         </select>
                                     </div>
-                                </div>
+                                </div> -->
 
                                 <div class="form-group row">
                                     <label for="example-date-input" class="col-sm-3 col-form-label">Description</label>
@@ -40,7 +40,7 @@
                                 <div class="form-group row">
                                     <label for="example-date-input" class="col-sm-3 col-form-label">Location</label>
                                     <div class="col-sm-9">
-                                        <select id="location_id" name="location_id" class="form-control" required="">
+                                        <select id="location_id" name="location_id" class="form-control"  >
                                             <option value=""> -- Select -- </option>
 
                                             @foreach($locations as $value)
@@ -100,7 +100,7 @@
                                <div class="form-group row">
                                     <label for="example-date-input" class="col-sm-3 col-form-label">Criticality</label>
                                     <div class="col-sm-3">
-                                        <select id="coa" name="coa" class="form-control" required="">
+                                        <select id="coa" name="coa" class="form-control" >
                                            <option value=""> -- Select -- </option>
                                             <option value="High" <?= isset($resource)?($resource->coa=='High')?'selected':'':'' ?>>High</option>
                                             <option value="Low" <?= isset($resource)?($resource->coa=='Low')?'selected':'':'' ?>>Low</option>
@@ -110,7 +110,7 @@
                                     </div>
                                      <label for="example-date-input" class="col-sm-3 col-form-label">Risk of Damage</label>
                                     <div class="col-sm-3">
-                                        <select id="rod" name="rod" class="form-control" required="">
+                                        <select id="rod" name="rod" class="form-control" >
                                           <option value=""> -- Select -- </option>
                                            <option value="High" <?= isset($resource)?($resource->rod=='High')?'selected':'':'' ?>>High</option>
                                             <option value="Low" <?= isset($resource)?($resource->rod=='Low')?'selected':'':'' ?>>Low</option>
@@ -124,7 +124,7 @@
                                 <div class="form-group row">
                                     <label for="example-date-input" class="col-sm-3 col-form-label">Approval</label>
                                     <div class="col-sm-9">
-                                        <select id="approval_group" name="approval_group" class="form-control" required="">
+                                        <select id="approval_group" name="approval_group" class="form-control" >
                                             <option value=""> -- Select -- </option>
                                             @foreach($roles as $value)
                                             <option value="{{$value->id}}" @if(isset($resource) &&  $value->id == $resource->approval_group) selected @endif>{{$value->name}}</option>
@@ -135,12 +135,28 @@
                                 </div>
 
                                 <div class="form-group row">
-                                        <label for="example-date-input" class="col-sm-3 col-form-label">Quantity</label>
-                                        <div class="col-sm-9">
-                                           <input class="form-control" type="number" value="{{ isset($resource)?$resource->quantity:'' }}" id="quantity" name="quantity" required >
+                                    <label for="example-date-input" class="col-sm-3 col-form-label">Quantity</label>
+                                    <div class="col-sm-9">
+                                       <input class="form-control" type="number" value="{{ isset($resource)?$resource->quantity:'' }}" id="quantity" name="quantity" required >
 
-                                        </div>
                                     </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="example-date-input" class="col-sm-3 col-form-label">Room</label>
+                                    <div class="col-sm-9">
+                                        <select id="room_id" name="room_id" class="form-control">
+                                            <option value="">-- Select --</option>
+                                                @if($rooms->count() > 0)
+                                                    @foreach($rooms as $value)
+                                                    <option value="{{$value->id}}" @if(isset($resource) &&  $resource->room_id == $value->id) selected @endif>{{$value->room_name}}</option>
+                                                    @endforeach
+                                                @endif
+
+                                        </select>
+
+                                    </div>
+                                </div>
 
 
                             </div>
