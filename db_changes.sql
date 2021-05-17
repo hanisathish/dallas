@@ -1222,7 +1222,7 @@ ADD `guest_l_name` VARCHAR( 255 ) NULL DEFAULT NULL AFTER `guest_f_name` ,
 ADD `guest_email` VARCHAR( 255 ) NULL DEFAULT NULL AFTER `guest_l_name` ,
 ADD `guest_mobile` VARCHAR( 255 ) NULL DEFAULT NULL AFTER `guest_email` ;
 
--------- 03 oct 2020 not executed
+-------- 03 oct 2020 
 INSERT INTO `comm_templates` (`id`, `tag`, `name`, `subject`, `body`, `org_id`, `createdBy`, `created_at`, `updatedBy`, `updated_at`, `deletedBy`, `deleted_at`) VALUES (NULL, 'notify_member_make_leader', 'Made as a Leader', 'Made as a Leader', 'Made as a Leader for group', '0', NULL, '2019-08-21 18:01:18', NULL, '0000-00-00 00:00:00', NULL, NULL);
 
 -- 13 oct 2020 
@@ -1231,7 +1231,7 @@ ALTER TABLE `locations` CHANGE `latitude` `latitude` VARCHAR( 100 ) CHARACTER SE
 CHANGE `longitude` `longitude` VARCHAR( 100 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL ;
 
 
--- not executed 7th nov 2020
+-- 7th nov 2020
 
 ALTER TABLE `events` ADD `eventChildCare` TINYINT( 1 ) NULL DEFAULT NULL AFTER `eventFreq` ;
 
@@ -1254,7 +1254,7 @@ ADD `zip_address` TEXT NULL DEFAULT NULL AFTER `state_address` ;
 
 ALTER TABLE `users` CHANGE `street address` `street_address` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL ;
 
-INSERT INTO `dallas`.`comm_templates` (
+INSERT INTO `comm_templates` (
 `id` ,
 `tag` ,
 `name` ,
@@ -1271,3 +1271,6 @@ INSERT INTO `dallas`.`comm_templates` (
 VALUES (
 NULL , 'forgot_password', 'Forgot Password', 'Forgot Password Sujbect', 'Forgot Password Body', '0', NULL , '2019-08-21 18:01:18', NULL , '0000-00-00 00:00:00', NULL , NULL
 );
+
+-- 21 nov 2020
+ALTER TABLE `events` ADD `eventEndDate` DATE NULL DEFAULT NULL AFTER `eventFreq` ;

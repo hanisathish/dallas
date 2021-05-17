@@ -13,6 +13,7 @@ use Illuminate\Http\Response;
 use DataTables;
 use Auth;
 use Illuminate\Support\Facades\Session;
+use DateTime;
 class EventsController extends Controller
 {
 
@@ -77,8 +78,24 @@ class EventsController extends Controller
             if($request->eventResource){
                 $insertData['eventResource'] = implode(",", $request->eventResource);
             }
+            $eventFreq = $request->eventFreq;
+            if($eventFreq == "Weekly"){
+                $begin = new \DateTime( $request->eventCreatedDate );
+                $end = new \DateTime( $request->eventEndDate );
+                $end = $end->modify( '+1 day' ); 
+
+                $interval = new \DateInterval('P1W');
+                $daterange = new \DatePeriod($begin, $interval ,$end);
+
+                foreach($daterange as $date){
+                    $insertData['eventCreatedDate'] = $date->format("Y-m-d");
+
+                    Events::create($insertData);
+                }
+            }else{
+                Events::create($insertData);
+            }
             
-            Events::create($insertData);
         }
 
        return response()->json(

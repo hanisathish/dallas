@@ -339,11 +339,12 @@ $("#btnForgotPwd").click(function () {
             processData: false,
             success: function (data)
             {
+
                 if(data.result_code == 1){
-                    $("#forgotpwdspan").html(data.message);
+                    $(".forgotpwdspan").html(data.message);
                 }else{
                     //alert(data.failure);
-                    $("#forgotpwdspan").html(data.message);
+                    $(".forgotpwdspan").html(data.message);
                     return false;
                 }
                  

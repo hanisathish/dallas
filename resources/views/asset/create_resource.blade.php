@@ -40,7 +40,7 @@
                                 <div class="form-group row">
                                     <label for="example-date-input" class="col-sm-3 col-form-label">Location</label>
                                     <div class="col-sm-9">
-                                        <select id="location_id" name="location_id" class="form-control"  >
+                                        <select id="location_id" required="" name="location_id" class="form-control"  >
                                             <option value=""> -- Select -- </option>
 
                                             @foreach($locations as $value)
@@ -137,7 +137,7 @@
                                 <div class="form-group row">
                                     <label for="example-date-input" class="col-sm-3 col-form-label">Quantity</label>
                                     <div class="col-sm-9">
-                                       <input class="form-control" type="number" value="{{ isset($resource)?$resource->quantity:'' }}" id="quantity" name="quantity" required >
+                                       <input class="form-control" type="number" value="{{ isset($resource)?$resource->quantity:'' }}" id="quantity" name="quantity"  >
 
                                     </div>
                                 </div>

@@ -278,7 +278,23 @@
 
                 }
             }
+
+
                     </script>
+
+<script type="text/javascript">
+
+    $(document).on('change','#eventFreq',function(){
+        //alert($(this).val());
+        if ($(this).val() == "Weekly") {
+            $(".eventenddateDiv").show();
+        } else {
+            $(".eventenddateDiv").hide();
+        }    
+    });
+
+
+</script>                    
 
 @endsection
 

@@ -786,7 +786,7 @@
                
                 <div class="form-group text-center m-t-20">
                     <div class="col-12">
-                        <button class="btn btn-info btn-block waves-effect waves-light" id="btnForgotPwd" type="submit">Submit</button>
+                        <button class="btn btn-info btn-block waves-effect waves-light" id="btnForgotPwd" type="button">Submit</button>
                     </div>
                     <div class="col-12 forgotpwdspan"></div>
                 </div>

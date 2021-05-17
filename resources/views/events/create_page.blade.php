@@ -66,12 +66,19 @@
                                  <div class="form-group row">
                                     <label for="example-date-input" class="col-sm-3 col-form-label">Occurence</label>
                                     <div class="col-sm-9">
-                                        <select id="eventFreq" name="eventFreq" class="form-control" required="" value="{{ isset($event)?$event->eventFreq:'' }}">
+                                        <select id="eventFreq" name="eventFreq" class="form-control eventFreq" required="" value="{{ isset($event)?$event->eventFreq:'' }}">
                                             <option value="Daily" <?= isset($event)?($event->eventFreq=='Daily')?'selected':'':'' ?>>Daily</option>
                                             <option value="Weekly" <?= isset($event)?($event->eventFreq=='Weekly')?'selected':'':'' ?>>Weekly</option>
                                             <option value="None" <?= isset($event)?($event->eventFreq=='None')?'selected':'':'' ?>>None</option>
                                         </select>
 
+                                    </div>
+                                </div>
+
+                                <div class="form-group row eventenddateDiv" style="display: none;">
+                                    <label for="example-date-input" class="col-sm-3 col-form-label">End Date</label>
+                                    <div class="col-sm-9">
+                                        <input required="" class="form-control" type="date" value="{{ isset($event)?$event->eventEndDate:'' }}" id="eventEndDate" name="eventEndDate" >
                                     </div>
                                 </div>
 

@@ -66,16 +66,18 @@ class CronBatchEmailController extends Controller {
                 $from = $sent_from_email;//'Church Software';//'dummy8088@gmail.com';
              
 
-            $offset = unserialize($cron_emails[$key]['files_offset']);
-
-            $file = unserialize($cron_emails[$key]['file_attach']);
-
-            $size = count($offset);
+            
 
             $msg = trim($msg);
             
-            if (!empty($file)) 
+            if (!empty($cron_emails[$key]['file_attach'])) 
             {
+
+                $offset = unserialize($cron_emails[$key]['files_offset']);
+
+                $file = unserialize($cron_emails[$key]['file_attach']);
+
+                $size = count($offset);
                  
 				try {
                     $send_mail = Mail::send(array(), array(), function ($email) use ($sub, $getToEmails, $from, $file, $size, $offset, $msg, $msg_sent_by_id_Master, $msg_sent_by_Master) 
