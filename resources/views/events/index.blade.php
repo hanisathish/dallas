@@ -286,7 +286,7 @@
 
     $(document).on('change','#eventFreq',function(){
         //alert($(this).val());
-        if ($(this).val() == "Weekly") {
+        if ($(this).val() == "Weekly" || $(this).val() == "Daily") {
             $(".eventenddateDiv").show();
         } else {
             $(".eventenddateDiv").hide();

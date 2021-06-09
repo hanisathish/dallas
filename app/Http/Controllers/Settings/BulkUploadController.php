@@ -166,7 +166,7 @@ class BulkUploadController extends Controller
 
                 }else if($request->input('bulk_upload_type') == 'member_bulk'){
                     $rolesAdminData = DB::table('roles')->where('orgId',$this->userguard->orgId)->where('role_tag','member')->get();
-                    if($countheader == 18  && in_array('email',$headerRow) && in_array('first_name',$headerRow) && in_array('last_name',$headerRow) && in_array('mobile_no',$headerRow)){
+                    if($countheader == 17  && in_array('email',$headerRow) && in_array('first_name',$headerRow) && in_array('last_name',$headerRow) && in_array('mobile_no',$headerRow)){
                         foreach ($data as $key => $value) {
                             if($value->email && $value->first_name){
                                 $randomString = strtolower(str_random(4));

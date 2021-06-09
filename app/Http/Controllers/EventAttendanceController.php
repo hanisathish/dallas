@@ -245,7 +245,8 @@ class EventAttendanceController extends Controller {
 		
         //dd($crudEvents);
         foreach ($crudEvents as $key=>$crudEventsvalue) {
-            if(strtotime($crudEventsvalue->eventCreatedDate) >= strtotime(date('Y-m-d')))
+            //changed to support attendance for past dates also
+            if(strtotime($crudEventsvalue->eventCreatedDate) <= strtotime(date('Y-m-d')))
             {
                 //dd($crudEventsvalue->eventCreatedDate);$key=>
                 $eventsData[] = date('j-n-Y',strtotime($crudEventsvalue->eventCreatedDate));

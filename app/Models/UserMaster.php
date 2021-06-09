@@ -286,4 +286,26 @@ class UserMaster extends Model  {
         return $query;
     }
 
+    /**
+    * @Function name : getHhUserSearchModel
+    * @Purpose : crud account heads based on  array
+    * @Added by : Sathish
+    * @Added Date : Nov 07, 2018
+    */
+    public static function getHhUserSearchModel($search) {
+        $user = self::select('id', "first_name", "last_name", "middle_name", "full_name","mobile_no", 'email', 'personal_id', 'profile_pic', 'street_address')
+                ->where(function($query)use($search) {
+                    /** @var $query Illuminate\Database\Query\Builder  */
+                    return $query->where('first_name', 'LIKE', "%" . $search . "%")
+                    ->orWhere('last_name', 'LIKE', "%" . $search . "%")
+                    ->orWhere('middle_name', 'LIKE', "%" . $search . "%")
+                    ->orWhere('full_name', 'LIKE', "%" . $search . "%")
+                    ->orWhere("email", $search)
+                    ->orWhere("mobile_no",$search);
+                })
+                ->where('orgId', '=', Auth::user()->orgId)
+                ->get();
+        return $user;
+    }
+
 }

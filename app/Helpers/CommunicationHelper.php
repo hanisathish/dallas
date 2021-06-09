@@ -65,7 +65,7 @@ class CommunicationHelper {
 
                     $cronInsertArray[] = array(
                         'recipient_user_id' => $userId,
-                        'orgId' => Auth::user()->orgId,
+                        'orgId' => $orgId,//Auth::user()->orgId,
                         'subject' => $template->subject,
                         'message' => $template->body,
                         'recipient' => $selectUserMasterDetail->email,
@@ -77,7 +77,7 @@ class CommunicationHelper {
                         'sent_from_email' => env('MAIL_FROM_ADDRESS'),
                         'send_dts' => date("Y-m-d H:i:s"),
                         'mail_error' => '',
-                        'createdBy'=>Auth::user()->id
+                        'createdBy'=>$createdUserId,//Auth::user()->id
                         // 'subaccount_id' => $email_subaccount_id
                     );
                     

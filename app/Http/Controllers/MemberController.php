@@ -95,7 +95,8 @@ class MemberController extends Controller
             
             $keys= ['name_prefix', 'first_name','middle_name', 'last_name', 'name_suffix', 'given_name', 'nick_name',
                      'email', 'mobile_no', 'life_stage', 'gender', 'dob', 'marital_status', 'doa', 'school_name', 
-                     'grade_id', 'medical_note', 'social_profile','street_address', 'apt_address', 'city_address', 'state_address', 'zip_address'
+                     'grade_id', 'medical_note', 'social_profile','street_address', 'apt_address', 'city_address', 'state_address', 'zip_address',
+                     'username'
                 ];
             foreach($keys as $key){
                 $user[$key] = $request[$key];
@@ -222,6 +223,8 @@ class MemberController extends Controller
         $orgId = $this->userSessionData['umOrgId'];
         // dd($payload['exceptIds']);
         //whereNotIn("id", $payload['exceptIds'])
+        $users = UserMaster::getHhUserSearchModel($payload['searchStr']);
+        /*
         $users = User::where('orgId', $orgId)
                     ->where('first_name', 'LIKE', "%" . $payload['searchStr'] . "%")
                     ->orWhere('last_name', 'LIKE', "%" . $payload['searchStr'] . "%")
@@ -232,6 +235,7 @@ class MemberController extends Controller
                     ->select('id', "first_name", "last_name", "middle_name", "full_name","mobile_no", 'email', 'personal_id', 'profile_pic', 'street_address')
                     ->get();
                     // dd($users);
+        */
         foreach($users as $user){
             $user["address"] = $this->extractAddress($user);
         }

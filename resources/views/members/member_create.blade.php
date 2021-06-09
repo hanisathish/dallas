@@ -129,7 +129,7 @@
     </div>
 
     <div class="col-sm-3 col-lg-3 col-md-3 divcols" >
-        <label>&nbsp;</label>
+        <label>Member Type</label>
         <select class="form-control" name="life_stage" id="life_stage" onchange="javascript:showAdultDiv(this)">
             <option value="">--Select--</option>
             <option {{ (isset($user) && $user->life_stage=="Adult")?'selected':''}} value="Adult">Adult</option>
@@ -214,7 +214,7 @@
     </div>
     <div class="col-sm-3 col-lg-3 col-md-3 divcols" >
         <label>Username for Login</label>
-      <input type="text" class="form-control" name="username" id="username" placeholder="Username for Login" value="{{ old('username', isset($user) ? $user->username : '') }}" required="">
+        <input type="text" class="form-control" name="username" id="username" placeholder="Username for Login" value="{{ old('username', isset($user) ? $user->username : '') }}" required="">
     </div>
 
     <div class="col-sm-3 col-lg-3 col-md-3 divcols" >
